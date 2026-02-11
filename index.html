@@ -103,17 +103,33 @@
       text-shadow:0 2px 14px rgba(0,0,0,.35);
     }
 
-    /* Tiles area */
-    .tiles{
+    /* Tiles (Flexbox 2x3) */
+    .tilesCard{
       flex:1;
       padding:10px;
       min-height:0;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr 1fr;
-      gap:10px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
     }
+
+    .tilesWrap{
+      flex:1;
+      min-height:0;
+      display:flex;
+      flex-direction:row;
+      flex-wrap:wrap;          /* 2 sütun */
+      align-content:stretch;   /* 3 satıra yay */
+      margin:-5px;             /* gap simülasyonu */
+    }
+
     .tile{
+      width:50%;               /* 2 sütun kesin */
+      padding:5px;             /* gap simülasyonu */
+    }
+
+    .tileInner{
+      height:100%;
       border:1px solid rgba(255,255,255,.12);
       border-radius:16px;
       background:rgba(255,255,255,.06);
@@ -125,7 +141,14 @@
       position:relative;
       overflow:hidden;
     }
-    .tile:before{
+
+    /* 6 tile: her biri 1/3 yükseklik, iOS9 uyumlu */
+    .tileInner{
+      min-height:0;
+    }
+    .tile{ height:33.3333%; }  /* 3 satır kesin */
+
+    .tileInner:before{
       content:"";
       position:absolute; inset:-60px -60px auto auto;
       width:140px; height:140px;
@@ -133,6 +156,7 @@
       transform:rotate(18deg);
       pointer-events:none;
     }
+
     .tname{
       font-size:18px;
       font-weight:900;
@@ -141,26 +165,24 @@
       margin-bottom:6px;
     }
     .ttime{
-      font-size:34px; /* büyük okunaklı */
+      font-size:34px;
       font-weight:900;
       letter-spacing:1px;
       font-variant-numeric:tabular-nums;
       text-shadow:0 2px 14px rgba(0,0,0,.35);
     }
-    .active{
+
+    .active .tileInner{
       border-color:rgba(122,162,255,.70);
       background:rgba(122,162,255,.16);
       box-shadow:0 0 0 2px rgba(122,162,255,.16) inset, 0 10px 26px rgba(0,0,0,.28);
     }
-    .active .tname{ color:#ffffff; }
-    .active .ttime{ color:#ffffff; }
 
     .err{
-      grid-column:1 / -1;
-      margin-top:-6px;
       font-size:12px;
       color:rgba(255,190,190,.98);
       font-weight:700;
+      padding:0 2px;
     }
 
     .footer{
@@ -207,8 +229,8 @@
       </div>
     </div>
 
-    <div class="card tiles" id="tilesWrap">
-      <!-- tiles JS ile basılacak -->
+    <div class="card tilesCard">
+      <div class="tilesWrap" id="tilesWrap"></div>
       <div class="err" id="err"></div>
     </div>
 
@@ -281,21 +303,24 @@
     el("statusLine").textContent = "Güncelleme: " + (data.generatedAt || "—");
 
     var wrap = el("tilesWrap");
-
-    // Önce err divini sakla, sonra içerik bas
-    var err = el("err");
     wrap.innerHTML = "";
+
     for(var i=0;i<PRAYERS.length;i++){
       var p = PRAYERS[i];
       var time = t[p.key] || "--:--";
+
       var tile = document.createElement("div");
       tile.className = "tile";
       tile.setAttribute("data-key", p.key);
-      tile.innerHTML = '<div class="tname">'+p.tr+'</div><div class="ttime">'+time+'</div>';
+
+      var inner = document.createElement("div");
+      inner.className = "tileInner";
+      inner.innerHTML = '<div class="tname">'+p.tr+'</div><div class="ttime">'+time+'</div>';
+
+      tile.appendChild(inner);
       wrap.appendChild(tile);
     }
-    // err en alta
-    wrap.appendChild(err);
+
     setError("");
   }
 
@@ -324,9 +349,11 @@
     el("nextPrayer").textContent = nameTr;
     el("countdown").textContent = fmtHMS(next.at.getTime() - now.getTime());
 
-    // aktif kutu: şu an hangi vakit aralığındayız?
+    // aktif kutu
     var tiles = document.querySelectorAll(".tile");
-    for(i=0;i<tiles.length;i++) tiles[i].className = tiles[i].className.replace(" active","");
+    for(i=0;i<tiles.length;i++){
+      tiles[i].className = tiles[i].className.replace(" active","");
+    }
 
     var bounds = [];
     for(i=0;i<PRAYERS.length;i++){
