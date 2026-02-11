@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Ankara Namaz Vakitleri</title>
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Namaz Vakti">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="format-detection" content="date=no">
+  <meta name="format-detection" content="address=no">
+  <meta name="format-detection" content="email=no">
+
+  <style>
+    :root{
+      --bg0:#070b14; --bg1:#0b1220; --line:rgba(255,255,255,.10);
+      --muted:rgba(234,240,255,.70); --text:#eaf0ff; --accent:#7aa2ff;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    }
+    body{margin:0;background:var(--bg0);color:var(--text);-webkit-text-size-adjust:100%;}
+    *{-webkit-tap-highlight-color:rgba(0,0,0,0);}
+    .topbar{height:8px;background:linear-gradient(90deg, rgba(122,162,255,.95), rgba(141,255,168,.85), rgba(255,204,102,.85));opacity:.85;}
+    .wrap{min-height:100vh;box-sizing:border-box;padding:16px 16px 18px;display:flex;flex-direction:column;gap:12px;
+      background:radial-gradient(1200px 700px at 20% -10%, rgba(122,162,255,.18), transparent 55%),
+                 radial-gradient(900px 600px at 90% 0%, rgba(141,255,168,.12), transparent 55%), var(--bg1);}
+    .header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;padding:14px;border:1px solid var(--line);border-radius:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.10));}
+    .title{font-size:20px;font-weight:900;}
+    .sub{margin-top:6px;font-size:13px;color:var(--muted);line-height:1.3;}
+    .clock{font-size:54px;font-weight:900;letter-spacing:1px;line-height:1;text-align:right;font-variant-numeric:tabular-nums;}
+    .pillrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+    .pill{border:1px solid var(--line);background:rgba(0,0,0,.16);padding:7px 10px;border-radius:999px;font-size:12px;color:var(--muted);white-space:nowrap;}
+    .dot{display:inline-block;width:8px;height:8px;border-radius:99px;margin-right:7px;background:var(--accent);vertical-align:middle;opacity:.95;}
+    .nextcard{border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg, rgba(122,162,255,.14), rgba(0,0,0,.18));padding:14px;}
+    .nextgrid{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+    .label{font-size:12px;color:var(--muted);}
+    .nextPrayer{font-size:30px;font-weight:900;margin-top:4px;}
+    .countdown{font-size:28px;font-weight:900;text-align:right;font-variant-numeric:tabular-nums;}
+    .listcard{border:1px solid var(--line);border-radius:18px;background:rgba(0,0,0,.18);padding:10px;}
+    .row{display:flex;justify-content:space-between;align-items:center;padding:12px 12px;border-radius:14px;background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.07);margin-top:10px;}
+    .row:first-child{margin-top:0;}
+    .pname{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:900;}
+    .badge{font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.10);background:rgba(0,0,0,.18);color:var(--muted);font-weight:800;}
+    .ptime{font-size:20px;font-weight:900;letter-spacing:.6px;font-variant-numeric:tabular-nums;}
+    .active{border-color:rgba(122,162,255,.55);box-shadow:0 0 0 2px rgba(122,162,255,.14) inset;background:rgba(122,162,255,.10);}
+    .active .badge{border-color:rgba(122,162,255,.35);color:rgba(234,240,255,.85);}
+    .err{margin-top:10px;font-size:13px;color:rgba(255,180,180,.95);}
+    .footer{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:6px;color:rgba(234,240,255,.55);font-size:12px;}
+    button{background:rgba(255,255,255,.07);color:var(--text);border:1px solid var(--line);padding:10px 12px;border-radius:12px;font-weight:900;}
+    button:active{transform:translateY(1px);}
+  </style>
+</head>
+
+<body>
+  <div class="topbar"></div>
+  <div class="wrap">
+    <div class="header">
+      <div>
+        <div class="title">Ankara • Namaz Vakitleri</div>
+        <div class="sub" id="dateLine">—</div>
+        <div class="pillrow">
+          <div class="pill"><span class="dot"></span><span id="districtPill">İlçe: —</span></div>
+          <div class="pill" id="srcPill">Kaynak: —</div>
+        </div>
+      </div>
+      <div class="clock" id="clock">--:--</div>
+    </div>
+
+    <div class="nextcard">
+      <div class="nextgrid">
+        <div>
+          <div class="label">Sıradaki</div>
+          <div class="nextPrayer" id="nextPrayer">—</div>
+        </div>
+        <div style="text-align:right">
+          <div class="label">Kalan</div>
+          <div class="countdown" id="countdown">--:--:--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="listcard">
+      <div id="timesList"></div>
+      <div class="err" id="err"></div>
+    </div>
+
+    <div class="footer">
+      <div id="statusLine">Güncelleme: —</div>
+      <button id="refreshBtn" type="button">Yenile</button>
+    </div>
+  </div>
+
+<script>
+(function(){
+  var PRAYERS = [
+    { key:"Imsak", tr:"İmsak", tag:"Fajr" },
+    { key:"Gunes", tr:"Güneş", tag:"Sun" },
+    { key:"Ogle",  tr:"Öğle",  tag:"Dhuhr" },
+    { key:"Ikindi",tr:"İkindi",tag:"Asr" },
+    { key:"Aksam", tr:"Akşam", tag:"Maghrib" },
+    { key:"Yatsi", tr:"Yatsı", tag:"Isha" }
+  ];
+  var NEXT_ORDER = ["Imsak","Ogle","Ikindi","Aksam","Yatsi"];
+
+  function el(id){ return document.getElementById(id); }
+  function pad(n){ n=String(n); return n.length<2 ? "0"+n : n; }
+  function fmtClock(d){ return pad(d.getHours()) + ":" + pad(d.getMinutes()); }
+  function fmtHMS(ms){
+    var s = Math.max(0, Math.floor(ms/1000));
+    var hh = Math.floor(s/3600);
+    var mm = Math.floor((s%3600)/60);
+    var ss = s%60;
+    return pad(hh)+":"+pad(mm)+":"+pad(ss);
+  }
+  function parseHHMM(baseDate, hhmm){
+    var parts = String(hhmm||"0:0").split(":");
+    var hh = parseInt(parts[0],10) || 0;
+    var mm = parseInt(parts[1],10) || 0;
+    var d = new Date(baseDate.getTime());
+    d.setHours(hh, mm, 0, 0);
+    return d;
+  }
+  function setError(msg){ el("err").textContent = msg || ""; }
+
+  function getJSON(url, onOk, onErr){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.onreadystatechange = function(){
+      if(xhr.readyState !== 4) return;
+      if(xhr.status >= 200 && xhr.status < 300){
+        try{ onOk(JSON.parse(xhr.responseText)); }
+        catch(e){ onErr("JSON parse hatası"); }
+      } else {
+        onErr("HTTP " + xhr.status);
+      }
+    };
+    xhr.onerror = function(){ onErr("Network error"); };
+    xhr.send();
+  }
+
+  var data = null;
+
+  function render(){
+    if(!data || !data.today){
+      setError("Veri yok.");
+      return;
+    }
+    var t = data.today;
+
+    el("dateLine").textContent = t.MiladiTarihUzun || t.MiladiTarihKisa || "—";
+    el("districtPill").textContent = "İlçe: " + (data.district || "—");
+    el("srcPill").textContent = "Kaynak: " + (data.source || "—");
+    el("statusLine").textContent = "Güncelleme: " + (data.generatedAt || "—") + " • " + (data.provider || "—");
+
+    var list = el("timesList");
+    list.innerHTML = "";
+    for(var i=0;i<PRAYERS.length;i++){
+      var p = PRAYERS[i];
+      var time = t[p.key] || "--:--";
+      var row = document.createElement("div");
+      row.className = "row";
+      row.setAttribute("data-key", p.key);
+      row.innerHTML = '<div class="pname"><span>'+p.tr+'</span><span class="badge">'+p.tag+'</span></div><div class="ptime">'+time+'</div>';
+      list.appendChild(row);
+    }
+    setError(data.warnings && data.warnings.length ? ("Not: " + data.warnings[0]) : "");
+  }
+
+  function updateLive(){
+    var now = new Date();
+    el("clock").textContent = fmtClock(now);
+    if(!data || !data.today) return;
+
+    var t = data.today;
+
+    var next = null, i, k, at;
+    for(i=0;i<NEXT_ORDER.length;i++){
+      k = NEXT_ORDER[i];
+      at = parseHHMM(now, t[k]);
+      if(at.getTime() > now.getTime()){ next = { k:k, at:at }; break; }
+    }
+    if(!next){
+      var tmr = new Date(now.getTime());
+      tmr.setDate(tmr.getDate()+1);
+      next = { k:"Imsak", at: parseHHMM(tmr, t["Imsak"]) };
+    }
+
+    var nameTr = next.k;
+    for(i=0;i<PRAYERS.length;i++){ if(PRAYERS[i].key === next.k){ nameTr = PRAYERS[i].tr; break; } }
+    el("nextPrayer").textContent = nameTr;
+    el("countdown").textContent = fmtHMS(next.at.getTime() - now.getTime());
+
+    var rows = document.querySelectorAll(".row");
+    for(i=0;i<rows.length;i++) rows[i].className = rows[i].className.replace(" active","");
+
+    var bounds = [];
+    for(i=0;i<PRAYERS.length;i++){
+      bounds.push({ k:PRAYERS[i].key, at: parseHHMM(now, t[PRAYERS[i].key]) });
+    }
+    bounds.sort(function(a,b){ return a.at - b.at; });
+
+    var active = null;
+    for(i=0;i<bounds.length;i++){
+      var s = bounds[i].at.getTime();
+      var e = (i<bounds.length-1) ? bounds[i+1].at.getTime() : 9999999999999;
+      if(now.getTime() >= s && now.getTime() < e){ active = bounds[i].k; break; }
+    }
+    if(active){
+      var node = document.querySelector('.row[data-key="'+active+'"]');
+      if(node) node.className += " active";
+    }
+  }
+
+  function load(){
+    setError("Yükleniyor...");
+    getJSON("vakit.json", function(j){
+      data = j;
+      render();
+    }, function(err){
+      setError("Veri alınamadı: " + err + " (vakit.json)");
+    });
+  }
+
+  el("refreshBtn").onclick = function(){ location.reload(); };
+
+  load();
+  setInterval(updateLive, 1000);
+  updateLive();
+})();
+</script>
+</body>
+</html>
