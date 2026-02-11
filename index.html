@@ -19,7 +19,6 @@
       --muted:rgba(255,255,255,.76);
       --border:rgba(255,255,255,.16);
       --glass:rgba(255,255,255,.075);
-      --glass2:rgba(0,0,0,.20);
       --accent:#7aa2ff;
       --accent2:#8dffa8;
       --warn:#ffcc66;
@@ -30,14 +29,13 @@
     body{
       margin:0;
       color:var(--text);
-      overflow:hidden;                 /* kiosk */
+      overflow:hidden;
       -webkit-text-size-adjust:100%;
       text-rendering:optimizeLegibility;
       background:#050914;
     }
     *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
-    /* Theme (auto: day/night) */
     body.theme-day{
       background:
         radial-gradient(circle at 18% 10%, rgba(122,162,255,.38), transparent 42%),
@@ -52,18 +50,16 @@
         linear-gradient(180deg,#050914 0%,#02040a 100%);
     }
 
-    /* Subtle mosque silhouette overlay (SVG data-uri) */
     body:before{
       content:"";
       position:fixed;
       left:0; right:0; bottom:-10px;
       height:55%;
-      opacity:.10;                     /* çok düşük */
+      opacity:.10;
       pointer-events:none;
       background-repeat:no-repeat;
       background-position:center bottom;
       background-size:cover;
-      /* basit cami silueti */
       background-image:url("data:image/svg+xml;utf8,\
 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 400'>\
   <defs>\
@@ -90,7 +86,6 @@
 </svg>");
     }
 
-    /* Top bar */
     .topbar{
       height:8px;
       background:linear-gradient(90deg, rgba(122,162,255,.98), rgba(141,255,168,.92), rgba(255,204,102,.92));
@@ -105,16 +100,13 @@
       gap:12px;
     }
 
-    /* Glass card */
     .card{
       border:1px solid var(--border);
       border-radius:20px;
       background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.20));
       box-shadow:0 18px 40px rgba(0,0,0,.45);
-      backdrop-filter: blur(0px); /* iOS9 yok, sorun değil */
     }
 
-    /* Header */
     .header{
       padding:12px 14px;
       display:flex;
@@ -168,7 +160,6 @@
       text-align:right;
     }
 
-    /* Next strip */
     .next{
       padding:10px 14px;
       border-radius:20px;
@@ -199,7 +190,6 @@
       text-align:right;
     }
 
-    /* Tiles card */
     .tilesCard{
       flex:1;
       min-height:0;
@@ -209,14 +199,13 @@
       gap:8px;
     }
 
-    /* 2x3 flex tiles (iOS9) */
     .tilesWrap{
       flex:1;
       min-height:0;
       display:flex;
       flex-wrap:wrap;
       align-content:stretch;
-      margin:-6px;              /* gap simülasyonu */
+      margin:-6px;
     }
     .tile{
       width:50%;
@@ -224,7 +213,6 @@
       padding:6px;
     }
 
-    /* Bigger look: content top/bottom, bigger padding, bigger time */
     .tileInner{
       height:100%;
       border-radius:22px;
@@ -255,7 +243,7 @@
       color:rgba(255,255,255,.92);
     }
     .ttime{
-      font-size:50px;            /* büyüttük */
+      font-size:50px;
       font-weight:900;
       letter-spacing:1px;
       line-height:1;
@@ -263,7 +251,6 @@
       text-shadow:0 3px 18px rgba(0,0,0,.45);
     }
 
-    /* Active: stronger glow + pulse animation */
     @keyframes pulseGlow{
       0%   { box-shadow:0 0 0 rgba(122,162,255,.0), 0 14px 34px rgba(0,0,0,.40); }
       50%  { box-shadow:0 0 34px rgba(122,162,255,.55), 0 16px 40px rgba(0,0,0,.48); }
@@ -294,6 +281,60 @@
       min-height:16px;
     }
     .rightFooter{ white-space:nowrap; }
+
+    /* ===== VAKİT GİRDİ OVERLAY ===== */
+    .overlay{
+      position:fixed;
+      left:0; top:0; right:0; bottom:0;
+      display:none;
+      z-index:9999;
+      padding:22px;
+      background:rgba(0,0,0,.72);
+    }
+    .overlay.show{ display:block; }
+
+    .ovCard{
+      height:100%;
+      border-radius:26px;
+      border:1px solid rgba(255,255,255,.18);
+      background:
+        radial-gradient(circle at 25% 20%, rgba(122,162,255,.30), transparent 45%),
+        radial-gradient(circle at 85% 15%, rgba(141,255,168,.18), transparent 50%),
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.35));
+      box-shadow:0 22px 55px rgba(0,0,0,.65);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      padding:24px;
+    }
+    .ovSmall{
+      font-size:16px;
+      color:rgba(255,255,255,.80);
+      font-weight:800;
+      letter-spacing:.3px;
+    }
+    .ovBig{
+      margin-top:10px;
+      font-size:74px;
+      font-weight:900;
+      letter-spacing:.6px;
+      text-shadow:0 4px 30px rgba(0,0,0,.55);
+    }
+    .ovTime{
+      margin-top:10px;
+      font-size:34px;
+      font-weight:900;
+      color:rgba(255,255,255,.90);
+      font-variant-numeric:tabular-nums;
+    }
+    .ovHint{
+      margin-top:18px;
+      font-size:14px;
+      color:rgba(255,255,255,.62);
+      font-weight:700;
+    }
   </style>
 </head>
 
@@ -335,6 +376,16 @@
     </div>
   </div>
 
+  <!-- Overlay -->
+  <div class="overlay" id="overlay">
+    <div class="ovCard">
+      <div class="ovSmall">VAKİT GİRDİ</div>
+      <div class="ovBig" id="ovPrayer">—</div>
+      <div class="ovTime" id="ovTime">--:--</div>
+      <div class="ovHint">1 dakika sonra ana ekrana dönülecek…</div>
+    </div>
+  </div>
+
 <script>
 (function(){
   var PRAYERS = [
@@ -345,7 +396,6 @@
     { key:"Aksam", tr:"Akşam" },
     { key:"Yatsi", tr:"Yatsı" }
   ];
-  // “Sıradaki” hesabı için mantıklı sıra
   var NEXT_ORDER = ["Imsak","Ogle","Ikindi","Aksam","Yatsi"];
 
   function el(id){ return document.getElementById(id); }
@@ -370,7 +420,6 @@
 
   function applyTheme(){
     var h = (new Date()).getHours();
-    // 07:00–18:59 day, diğerleri night
     document.body.className = (h >= 7 && h < 19) ? "theme-day" : "theme-night";
   }
 
@@ -390,13 +439,39 @@
     xhr.send();
   }
 
+  // Overlay logic
+  var overlayTimer = null;
+  function showOverlay(prayerTr, timeHHMM){
+    var ov = el("overlay");
+    el("ovPrayer").textContent = prayerTr;
+    el("ovTime").textContent = timeHHMM || "--:--";
+    ov.className = "overlay show";
+
+    if(overlayTimer) clearTimeout(overlayTimer);
+    overlayTimer = setTimeout(function(){
+      ov.className = "overlay";
+    }, 60000); // 60 sn
+  }
+
+  // Prevent multiple triggers within same day+prayer
+  function todayKey(){
+    var d = new Date();
+    return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+  }
+  function getFiredMap(){
+    try{
+      var raw = localStorage.getItem("fired_map_v1");
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){ return {}; }
+  }
+  function setFiredMap(m){
+    try{ localStorage.setItem("fired_map_v1", JSON.stringify(m)); }catch(e){}
+  }
+
   var data = null;
 
   function renderTiles(){
-    if(!data || !data.today){
-      setError("Veri yok.");
-      return;
-    }
+    if(!data || !data.today){ setError("Veri yok."); return; }
     var t = data.today;
 
     el("dateLine").textContent = t.MiladiTarihUzun || t.MiladiTarihKisa || "—";
@@ -422,7 +497,6 @@
       tile.appendChild(inner);
       wrap.appendChild(tile);
     }
-
     setError("");
   }
 
@@ -435,7 +509,7 @@
 
     var t = data.today;
 
-    // Next prayer + time
+    // Find next prayer (and time) based on NEXT_ORDER
     var next = null, i, k, at;
     for(i=0;i<NEXT_ORDER.length;i++){
       k = NEXT_ORDER[i];
@@ -448,25 +522,47 @@
       next = { k:"Imsak", at: parseHHMM(tmr, t["Imsak"]), time:t["Imsak"] };
     }
 
+    // label: “İkindi • 15:58”
     var nameTr = next.k;
     for(i=0;i<PRAYERS.length;i++){ if(PRAYERS[i].key === next.k){ nameTr = PRAYERS[i].tr; break; } }
     el("nextPrayer").textContent = nameTr + " • " + (next.time || "--:--");
     el("countdown").textContent = fmtHMS(next.at.getTime() - now.getTime());
 
-    // Active tile highlight: highlight "next" tile
+    // highlight next tile
     var tiles = document.querySelectorAll(".tile");
-    for(i=0;i<tiles.length;i++){
-      tiles[i].className = tiles[i].className.replace(" active","");
-    }
+    for(i=0;i<tiles.length;i++){ tiles[i].className = tiles[i].className.replace(" active",""); }
     var node = document.querySelector('.tile[data-key="'+next.k+'"]');
     if(node) node.className += " active";
+
+    // ===== “vakit girdi” tetikleme =====
+    // Her vakit için, tam o dakikaya gelince (hh:mm:00–:02 aralığı) bir kez tetikler.
+    var fired = getFiredMap();
+    var day = todayKey();
+
+    for(i=0;i<PRAYERS.length;i++){
+      var p = PRAYERS[i];
+      var hhmm = t[p.key];
+      if(!hhmm) continue;
+
+      var d0 = parseHHMM(now, hhmm);
+      var diff = Math.abs(now.getTime() - d0.getTime());
+
+      // Saat tam geldiği anda, iOS timer gecikmeleri için 2.5sn tolerans
+      if(diff <= 2500){
+        var key = day + "|" + p.key;
+        if(!fired[key]){
+          fired[key] = 1;
+          setFiredMap(fired);
+          showOverlay(p.tr, hhmm);
+        }
+      }
+    }
   }
 
   // Init
   el("copyYear").textContent = String((new Date()).getFullYear());
   applyTheme();
 
-  // Load data
   setError("Yükleniyor...");
   getJSON("vakit.json", function(j){
     data = j;
@@ -476,7 +572,6 @@
   }, function(err){
     setError("Veri alınamadı: " + err + " (vakit.json)");
   });
-
 })();
 </script>
 </body>
