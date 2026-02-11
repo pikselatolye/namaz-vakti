@@ -22,121 +22,159 @@
       --accent:#7aa2ff;
       font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
     }
+    html, body { height:100%; }
     body{
-      margin:0;background:var(--bg0);color:var(--text);
+      margin:0; height:100%;
+      background:var(--bg0); color:var(--text);
       -webkit-text-size-adjust:100%;
-      text-rendering:optimizeLegibility;
+      overflow:hidden;
     }
-    *{-webkit-tap-highlight-color:rgba(0,0,0,0);}
+    *{-webkit-tap-highlight-color:rgba(0,0,0,0); box-sizing:border-box;}
 
     .topbar{
-      height:10px;
+      height:8px;
       background:linear-gradient(90deg, rgba(122,162,255,.98), rgba(141,255,168,.92), rgba(255,204,102,.92));
       opacity:.9;
     }
 
     .wrap{
-      min-height:100vh;box-sizing:border-box;
-      padding:18px 18px 18px;
-      display:flex;flex-direction:column;gap:14px;
+      height:calc(100% - 8px);
+      padding:14px 14px 12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
       background:
-        radial-gradient(1200px 700px at 20% -10%, rgba(122,162,255,.20), transparent 55%),
-        radial-gradient(900px 600px at 90% 0%, rgba(141,255,168,.14), transparent 55%),
+        radial-gradient(1200px 700px at 20% -10%, rgba(122,162,255,.18), transparent 55%),
+        radial-gradient(900px 600px at 90% 0%, rgba(141,255,168,.12), transparent 55%),
         linear-gradient(180deg, #0b1220 0%, #070b14 100%);
     }
 
     .card{
       border:1px solid var(--line);
-      border-radius:20px;
+      border-radius:18px;
       background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.18));
-      box-shadow:0 10px 30px rgba(0,0,0,.30);
+      box-shadow:0 10px 26px rgba(0,0,0,.28);
     }
 
+    /* Header */
     .header{
-      display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
-      padding:16px;
+      padding:12px 12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      min-height:78px;
     }
-    .title{font-size:24px;font-weight:900;letter-spacing:.2px;}
-    .sub{margin-top:8px;font-size:15px;color:var(--muted);line-height:1.35;}
-    .pillrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
+    .title{font-size:20px;font-weight:900;letter-spacing:.2px;}
+    .sub{margin-top:6px;font-size:13px;color:var(--muted);line-height:1.25;}
+    .pills{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;}
     .pill{
       border:1px solid rgba(255,255,255,.16);
       background:rgba(0,0,0,.22);
-      padding:8px 12px;border-radius:999px;
-      font-size:13px;color:rgba(255,255,255,.82);
+      padding:6px 10px;border-radius:999px;
+      font-size:12px;color:rgba(255,255,255,.82);
       white-space:nowrap;
     }
     .dot{
-      display:inline-block;width:9px;height:9px;border-radius:99px;margin-right:8px;
+      display:inline-block;width:8px;height:8px;border-radius:99px;margin-right:7px;
       background:var(--accent);vertical-align:middle;opacity:.95;
-      box-shadow:0 0 0 3px rgba(122,162,255,.15);
+      box-shadow:0 0 0 3px rgba(122,162,255,.14);
     }
-
     .clock{
-      font-size:64px;font-weight:900;letter-spacing:1px;line-height:1;
+      font-size:52px;font-weight:900;letter-spacing:1px;line-height:1;
       text-align:right;font-variant-numeric:tabular-nums;
       text-shadow:0 2px 14px rgba(0,0,0,.35);
+      padding-top:2px;
+      min-width:128px;
     }
 
+    /* Next strip */
     .next{
-      padding:16px;
-      background:
-        linear-gradient(180deg, rgba(122,162,255,.16), rgba(0,0,0,.20));
+      padding:10px 12px;
+      background:linear-gradient(180deg, rgba(122,162,255,.16), rgba(0,0,0,.18));
+      min-height:58px;
     }
     .nextgrid{display:flex;justify-content:space-between;align-items:center;gap:10px;}
-    .label{font-size:14px;color:var(--muted);font-weight:800;}
-    .nextPrayer{font-size:34px;font-weight:900;margin-top:6px;letter-spacing:.2px;}
+    .label{font-size:12px;color:var(--muted);font-weight:800;}
+    .nextPrayer{font-size:22px;font-weight:900;margin-top:3px;}
     .countdown{
-      font-size:34px;font-weight:900;text-align:right;
+      font-size:22px;font-weight:900;margin-top:3px;
       font-variant-numeric:tabular-nums;
       text-shadow:0 2px 14px rgba(0,0,0,.35);
     }
 
-    .list{padding:12px;}
-    .row{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:16px 14px;border-radius:16px;
+    /* Tiles area */
+    .tiles{
+      flex:1;
+      padding:10px;
+      min-height:0;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      gap:10px;
+    }
+    .tile{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
       background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      margin-top:12px;
+      box-shadow:0 8px 22px rgba(0,0,0,.22);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      padding:12px 12px;
+      position:relative;
+      overflow:hidden;
     }
-    .row:first-child{margin-top:0;}
-    .pname{
-      font-size:22px;font-weight:900;letter-spacing:.2px;
+    .tile:before{
+      content:"";
+      position:absolute; inset:-60px -60px auto auto;
+      width:140px; height:140px;
+      background:radial-gradient(circle at 30% 30%, rgba(122,162,255,.18), transparent 60%);
+      transform:rotate(18deg);
+      pointer-events:none;
     }
-    .ptime{
-      font-size:26px;font-weight:900;letter-spacing:1px;
+    .tname{
+      font-size:18px;
+      font-weight:900;
+      letter-spacing:.2px;
+      color:rgba(243,247,255,.92);
+      margin-bottom:6px;
+    }
+    .ttime{
+      font-size:34px; /* büyük okunaklı */
+      font-weight:900;
+      letter-spacing:1px;
       font-variant-numeric:tabular-nums;
+      text-shadow:0 2px 14px rgba(0,0,0,.35);
     }
     .active{
-      border-color:rgba(122,162,255,.65);
-      background:rgba(122,162,255,.14);
-      box-shadow:0 0 0 2px rgba(122,162,255,.16) inset;
+      border-color:rgba(122,162,255,.70);
+      background:rgba(122,162,255,.16);
+      box-shadow:0 0 0 2px rgba(122,162,255,.16) inset, 0 10px 26px rgba(0,0,0,.28);
     }
+    .active .tname{ color:#ffffff; }
+    .active .ttime{ color:#ffffff; }
 
-    .err{margin-top:10px;font-size:14px;color:rgba(255,190,190,.98);font-weight:700;}
+    .err{
+      grid-column:1 / -1;
+      margin-top:-6px;
+      font-size:12px;
+      color:rgba(255,190,190,.98);
+      font-weight:700;
+    }
 
     .footer{
-      margin-top:auto;
-      display:flex;justify-content:space-between;align-items:center;gap:10px;
-      padding-top:6px;
-      color:rgba(234,240,255,.62);
-      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:0 2px;
+      color:rgba(234,240,255,.58);
+      font-size:11px;
+      line-height:1.2;
+      min-height:18px;
     }
-    button{
-      background:rgba(255,255,255,.08);color:var(--text);
-      border:1px solid rgba(255,255,255,.16);
-      padding:10px 14px;border-radius:14px;font-weight:900;
-    }
-    button:active{transform:translateY(1px);}
-
-    .copyright{
-      text-align:center;
-      margin-top:10px;
-      font-size:12px;
-      color:rgba(234,240,255,.55);
-      letter-spacing:.2px;
-    }
+    .rightFooter{white-space:nowrap;}
   </style>
 </head>
 
@@ -145,10 +183,10 @@
 
   <div class="wrap">
     <div class="card header">
-      <div>
+      <div style="min-width:0">
         <div class="title">Ankara • Namaz Vakitleri</div>
         <div class="sub" id="dateLine">—</div>
-        <div class="pillrow">
+        <div class="pills">
           <div class="pill"><span class="dot"></span><span id="districtPill">İlçe: —</span></div>
           <div class="pill" id="srcPill">Kaynak: —</div>
         </div>
@@ -169,17 +207,15 @@
       </div>
     </div>
 
-    <div class="card list">
-      <div id="timesList"></div>
+    <div class="card tiles" id="tilesWrap">
+      <!-- tiles JS ile basılacak -->
       <div class="err" id="err"></div>
     </div>
 
     <div class="footer">
       <div id="statusLine">Güncelleme: —</div>
-      <button id="refreshBtn" type="button">Yenile</button>
+      <div class="rightFooter">© <span id="copyYear"></span> Ahmet Ensar Kibaroğlu</div>
     </div>
-
-    <div class="copyright" id="copyLine">© <span id="copyYear"></span> Ahmet Ensar Kibaroğlu</div>
   </div>
 
 <script>
@@ -232,7 +268,7 @@
 
   var data = null;
 
-  function render(){
+  function renderTiles(){
     if(!data || !data.today){
       setError("Veri yok.");
       return;
@@ -244,18 +280,22 @@
     el("srcPill").textContent = "Kaynak: " + (data.source || "—");
     el("statusLine").textContent = "Güncelleme: " + (data.generatedAt || "—");
 
-    var list = el("timesList");
-    list.innerHTML = "";
+    var wrap = el("tilesWrap");
+
+    // Önce err divini sakla, sonra içerik bas
+    var err = el("err");
+    wrap.innerHTML = "";
     for(var i=0;i<PRAYERS.length;i++){
       var p = PRAYERS[i];
       var time = t[p.key] || "--:--";
-      var row = document.createElement("div");
-      row.className = "row";
-      row.setAttribute("data-key", p.key);
-      row.innerHTML = '<div class="pname">'+p.tr+'</div><div class="ptime">'+time+'</div>';
-      list.appendChild(row);
+      var tile = document.createElement("div");
+      tile.className = "tile";
+      tile.setAttribute("data-key", p.key);
+      tile.innerHTML = '<div class="tname">'+p.tr+'</div><div class="ttime">'+time+'</div>';
+      wrap.appendChild(tile);
     }
-
+    // err en alta
+    wrap.appendChild(err);
     setError("");
   }
 
@@ -284,9 +324,9 @@
     el("nextPrayer").textContent = nameTr;
     el("countdown").textContent = fmtHMS(next.at.getTime() - now.getTime());
 
-    // aktif satır
-    var rows = document.querySelectorAll(".row");
-    for(i=0;i<rows.length;i++) rows[i].className = rows[i].className.replace(" active","");
+    // aktif kutu: şu an hangi vakit aralığındayız?
+    var tiles = document.querySelectorAll(".tile");
+    for(i=0;i<tiles.length;i++) tiles[i].className = tiles[i].className.replace(" active","");
 
     var bounds = [];
     for(i=0;i<PRAYERS.length;i++){
@@ -301,7 +341,7 @@
       if(now.getTime() >= s && now.getTime() < e){ active = bounds[i].k; break; }
     }
     if(active){
-      var node = document.querySelector('.row[data-key="'+active+'"]');
+      var node = document.querySelector('.tile[data-key="'+active+'"]');
       if(node) node.className += " active";
     }
   }
@@ -310,13 +350,13 @@
     setError("Yükleniyor...");
     getJSON("vakit.json", function(j){
       data = j;
-      render();
+      renderTiles();
+      setError("");
     }, function(err){
       setError("Veri alınamadı: " + err + " (vakit.json)");
     });
   }
 
-  el("refreshBtn").onclick = function(){ location.reload(); };
   el("copyYear").textContent = String(new Date().getFullYear());
 
   load();
