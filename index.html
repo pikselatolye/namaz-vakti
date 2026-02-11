@@ -51,13 +51,13 @@
     }
 
     .card{
-      border:1px solid var(--line);
+      border:1px solid rgba(255,255,255,.14);
       border-radius:18px;
       background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.18));
       box-shadow:0 10px 26px rgba(0,0,0,.28);
     }
 
-    /* HEADER (biraz daha kompakt -> kutular daha uzun) */
+    /* HEADER (kompakt) */
     .header{
       padding:10px 12px;
       display:flex;
@@ -67,7 +67,7 @@
       min-height:72px;
     }
     .title{font-size:19px;font-weight:900;letter-spacing:.2px;}
-    .sub{margin-top:6px;font-size:12px;color:var(--muted);line-height:1.25;}
+    .sub{margin-top:6px;font-size:12px;color:rgba(234,240,255,.78);line-height:1.25;}
     .pills{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;}
     .pill{
       border:1px solid rgba(255,255,255,.16);
@@ -89,17 +89,17 @@
       min-width:120px;
     }
 
-    /* NEXT (ince şerit) */
+    /* NEXT (daha ince -> kutulara yer açar) */
     .next{
-      padding:8px 12px;
+      padding:6px 12px;
       background:linear-gradient(180deg, rgba(122,162,255,.16), rgba(0,0,0,.18));
-      min-height:52px;
+      min-height:46px;
     }
     .nextgrid{display:flex;justify-content:space-between;align-items:center;gap:10px;}
-    .label{font-size:12px;color:var(--muted);font-weight:800;}
-    .nextPrayer{font-size:20px;font-weight:900;margin-top:3px;}
+    .label{font-size:12px;color:rgba(234,240,255,.78);font-weight:800;}
+    .nextPrayer{font-size:19px;font-weight:900;margin-top:3px;}
     .countdown{
-      font-size:20px;font-weight:900;margin-top:3px;
+      font-size:19px;font-weight:900;margin-top:3px;
       font-variant-numeric:tabular-nums;
       text-shadow:0 2px 14px rgba(0,0,0,.35);
     }
@@ -127,7 +127,7 @@
 
     .tile{
       width:50%;
-      height:36%;              /* daha uzun kutular (was 33.33) */
+      height:38%;              /* daha uzun kutu */
       padding:4px;             /* gap simülasyonu */
     }
 
@@ -163,7 +163,7 @@
       margin-bottom:6px;
     }
     .ttime{
-      font-size:36px;
+      font-size:38px; /* daha büyük saat */
       font-weight:900;
       letter-spacing:1px;
       font-variant-numeric:tabular-nums;
@@ -183,7 +183,7 @@
       padding:0 2px;
     }
 
-    /* FOOTER */
+    /* FOOTER (biraz daha ince) */
     .footer{
       display:flex;
       justify-content:space-between;
@@ -191,9 +191,9 @@
       gap:10px;
       padding:0 2px;
       color:rgba(234,240,255,.58);
-      font-size:10.5px;
+      font-size:10px;
       line-height:1.2;
-      min-height:16px;
+      min-height:14px;
     }
     .rightFooter{white-space:nowrap;}
   </style>
