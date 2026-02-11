@@ -18,7 +18,6 @@
       --text:#f5f8ff;
       --muted:rgba(255,255,255,.76);
       --border:rgba(255,255,255,.16);
-      --glass:rgba(255,255,255,.075);
       --accent:#7aa2ff;
       --accent2:#8dffa8;
       --warn:#ffcc66;
@@ -47,15 +46,17 @@
       background:
         radial-gradient(circle at 15% 10%, rgba(122,162,255,.22), transparent 45%),
         radial-gradient(circle at 88% 0%, rgba(122,162,255,.10), transparent 55%),
+        radial-gradient(circle at 60% 95%, rgba(122,162,255,.10), transparent 52%),
         linear-gradient(180deg,#050914 0%,#02040a 100%);
     }
 
+    /* Cami silueti daha görünür */
     body:before{
       content:"";
       position:fixed;
       left:0; right:0; bottom:-10px;
       height:55%;
-      opacity:.10;
+      opacity:.18; /* 0.10 -> 0.18 */
       pointer-events:none;
       background-repeat:no-repeat;
       background-position:center bottom;
@@ -65,7 +66,7 @@
   <defs>\
     <linearGradient id='g' x1='0' x2='0' y1='0' y2='1'>\
       <stop offset='0' stop-color='%23ffffff' stop-opacity='0.00'/>\
-      <stop offset='1' stop-color='%23ffffff' stop-opacity='0.40'/>\
+      <stop offset='1' stop-color='%23ffffff' stop-opacity='0.55'/>\
     </linearGradient>\
   </defs>\
   <g fill='url(%23g)'>\
@@ -85,6 +86,16 @@
   </g>\
 </svg>");
     }
+    /* Silüetin altına hafif glow (daha net görünür) */
+    body:after{
+      content:"";
+      position:fixed;
+      left:0; right:0; bottom:0;
+      height:28%;
+      pointer-events:none;
+      background:radial-gradient(circle at 50% 100%, rgba(122,162,255,.20), transparent 55%);
+      opacity:.9;
+    }
 
     .topbar{
       height:8px;
@@ -98,6 +109,8 @@
       display:flex;
       flex-direction:column;
       gap:12px;
+      position:relative;
+      z-index:1;
     }
 
     .card{
@@ -198,7 +211,6 @@
       flex-direction:column;
       gap:8px;
     }
-
     .tilesWrap{
       flex:1;
       min-height:0;
@@ -212,7 +224,6 @@
       height:33.3333%;
       padding:6px;
     }
-
     .tileInner{
       height:100%;
       border-radius:22px;
@@ -235,7 +246,6 @@
       transform:rotate(18deg);
       pointer-events:none;
     }
-
     .tname{
       font-size:22px;
       font-weight:900;
@@ -250,7 +260,6 @@
       font-variant-numeric:tabular-nums;
       text-shadow:0 3px 18px rgba(0,0,0,.45);
     }
-
     @keyframes pulseGlow{
       0%   { box-shadow:0 0 0 rgba(122,162,255,.0), 0 14px 34px rgba(0,0,0,.40); }
       50%  { box-shadow:0 0 34px rgba(122,162,255,.55), 0 16px 40px rgba(0,0,0,.48); }
@@ -282,25 +291,43 @@
     }
     .rightFooter{ white-space:nowrap; }
 
-    /* ===== VAKİT GİRDİ OVERLAY ===== */
+    /* ===== OVERLAY ===== */
     .overlay{
       position:fixed;
       left:0; top:0; right:0; bottom:0;
       display:none;
       z-index:9999;
       padding:22px;
-      background:rgba(0,0,0,.72);
+      background:rgba(0,0,0,.74);
     }
     .overlay.show{ display:block; }
 
+    @keyframes popIn{
+      0%   { transform:scale(.92); opacity:0; }
+      60%  { transform:scale(1.02); opacity:1; }
+      100% { transform:scale(1.00); }
+    }
+    @keyframes gentleShake{
+      0%{ transform:translate3d(0,0,0); }
+      25%{ transform:translate3d(-1px,0,0); }
+      50%{ transform:translate3d(1px,0,0); }
+      75%{ transform:translate3d(-1px,0,0); }
+      100%{ transform:translate3d(0,0,0); }
+    }
+    @keyframes overlayPulse{
+      0%{ box-shadow:0 0 0 rgba(122,162,255,.0), 0 22px 55px rgba(0,0,0,.65); }
+      50%{ box-shadow:0 0 45px rgba(122,162,255,.45), 0 26px 60px rgba(0,0,0,.72); }
+      100%{ box-shadow:0 0 0 rgba(122,162,255,.0), 0 22px 55px rgba(0,0,0,.65); }
+    }
+
+    /* Overlay day/night theme */
+    .overlay.ov-day{ background:rgba(0,0,0,.62); }
+    .overlay.ov-night{ background:rgba(0,0,0,.78); }
+
     .ovCard{
       height:100%;
-      border-radius:26px;
+      border-radius:28px;
       border:1px solid rgba(255,255,255,.18);
-      background:
-        radial-gradient(circle at 25% 20%, rgba(122,162,255,.30), transparent 45%),
-        radial-gradient(circle at 85% 15%, rgba(141,255,168,.18), transparent 50%),
-        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.35));
       box-shadow:0 22px 55px rgba(0,0,0,.65);
       display:flex;
       flex-direction:column;
@@ -308,12 +335,33 @@
       align-items:center;
       text-align:center;
       padding:24px;
+      animation:popIn .55s ease-out, overlayPulse 2.2s ease-in-out infinite;
     }
+    .ovCard.shakeOnce{
+      animation:popIn .55s ease-out, overlayPulse 2.2s ease-in-out infinite, gentleShake .45s ease-in-out 2;
+    }
+
+    /* Card background differs by theme */
+    .overlay.ov-day .ovCard{
+      background:
+        radial-gradient(circle at 25% 20%, rgba(141,255,168,.24), transparent 50%),
+        radial-gradient(circle at 85% 15%, rgba(122,162,255,.30), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.28));
+      border-color:rgba(141,255,168,.22);
+    }
+    .overlay.ov-night .ovCard{
+      background:
+        radial-gradient(circle at 25% 20%, rgba(122,162,255,.26), transparent 50%),
+        radial-gradient(circle at 85% 15%, rgba(140,120,255,.18), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.40));
+      border-color:rgba(122,162,255,.22);
+    }
+
     .ovSmall{
       font-size:16px;
-      color:rgba(255,255,255,.80);
-      font-weight:800;
-      letter-spacing:.3px;
+      color:rgba(255,255,255,.82);
+      font-weight:900;
+      letter-spacing:.6px;
     }
     .ovBig{
       margin-top:10px;
@@ -326,15 +374,45 @@
       margin-top:10px;
       font-size:34px;
       font-weight:900;
-      color:rgba(255,255,255,.90);
+      color:rgba(255,255,255,.92);
       font-variant-numeric:tabular-nums;
     }
     .ovHint{
-      margin-top:18px;
+      margin-top:16px;
       font-size:14px;
       color:rgba(255,255,255,.62);
-      font-weight:700;
+      font-weight:800;
     }
+    .ovProgress{
+      width:78%;
+      max-width:520px;
+      height:8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.22);
+      overflow:hidden;
+      margin-top:18px;
+    }
+    .ovBar{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg, rgba(122,162,255,.95), rgba(141,255,168,.80), rgba(255,204,102,.80));
+    }
+
+    /* quick flash when overlay appears */
+    .flash{
+      position:fixed; inset:0;
+      z-index:9998;
+      pointer-events:none;
+      background:rgba(255,255,255,.25);
+      opacity:0;
+    }
+    @keyframes flashAnim{
+      0%{opacity:0;}
+      30%{opacity:1;}
+      100%{opacity:0;}
+    }
+    .flash.run{ animation:flashAnim .45s ease-out 1; }
   </style>
 </head>
 
@@ -376,12 +454,15 @@
     </div>
   </div>
 
+  <div class="flash" id="flash"></div>
+
   <!-- Overlay -->
   <div class="overlay" id="overlay">
-    <div class="ovCard">
+    <div class="ovCard" id="ovCard">
       <div class="ovSmall">VAKİT GİRDİ</div>
       <div class="ovBig" id="ovPrayer">—</div>
       <div class="ovTime" id="ovTime">--:--</div>
+      <div class="ovProgress"><div class="ovBar" id="ovBar"></div></div>
       <div class="ovHint">1 dakika sonra ana ekrana dönülecek…</div>
     </div>
   </div>
@@ -418,9 +499,12 @@
   }
   function setError(msg){ el("err").textContent = msg || ""; }
 
-  function applyTheme(){
+  function isDayTime(){
     var h = (new Date()).getHours();
-    document.body.className = (h >= 7 && h < 19) ? "theme-day" : "theme-night";
+    return (h >= 7 && h < 19);
+  }
+  function applyTheme(){
+    document.body.className = isDayTime() ? "theme-day" : "theme-night";
   }
 
   function getJSON(url, onOk, onErr){
@@ -439,21 +523,58 @@
     xhr.send();
   }
 
-  // Overlay logic
+  // Overlay
   var overlayTimer = null;
+  var progressTimer = null;
+
+  function triggerFlash(){
+    var f = el("flash");
+    f.className = "flash";
+    f.offsetHeight; // reflow
+    f.className = "flash run";
+  }
+
   function showOverlay(prayerTr, timeHHMM){
+    // theme class for overlay
     var ov = el("overlay");
+    ov.className = "overlay show " + (isDayTime() ? "ov-day" : "ov-night");
+
     el("ovPrayer").textContent = prayerTr;
     el("ovTime").textContent = timeHHMM || "--:--";
-    ov.className = "overlay show";
+
+    // shake reset
+    var card = el("ovCard");
+    card.className = "ovCard";
+    card.offsetHeight;
+    card.className = "ovCard shakeOnce";
+
+    // flash
+    triggerFlash();
+
+    // Progress bar
+    var bar = el("ovBar");
+    bar.style.width = "0%";
+    var start = (new Date()).getTime();
+
+    if(progressTimer) clearInterval(progressTimer);
+    progressTimer = setInterval(function(){
+      var now = (new Date()).getTime();
+      var pct = Math.min(100, Math.floor(((now - start) / 60000) * 100));
+      bar.style.width = pct + "%";
+      if(pct >= 100){
+        clearInterval(progressTimer);
+        progressTimer = null;
+      }
+    }, 250);
 
     if(overlayTimer) clearTimeout(overlayTimer);
     overlayTimer = setTimeout(function(){
       ov.className = "overlay";
-    }, 60000); // 60 sn
+      if(progressTimer){ clearInterval(progressTimer); progressTimer = null; }
+    }, 60000);
   }
 
-  // Prevent multiple triggers within same day+prayer
+  // Fire lock per day+prayer
   function todayKey(){
     var d = new Date();
     return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
@@ -509,7 +630,7 @@
 
     var t = data.today;
 
-    // Find next prayer (and time) based on NEXT_ORDER
+    // Next prayer
     var next = null, i, k, at;
     for(i=0;i<NEXT_ORDER.length;i++){
       k = NEXT_ORDER[i];
@@ -522,20 +643,18 @@
       next = { k:"Imsak", at: parseHHMM(tmr, t["Imsak"]), time:t["Imsak"] };
     }
 
-    // label: “İkindi • 15:58”
     var nameTr = next.k;
     for(i=0;i<PRAYERS.length;i++){ if(PRAYERS[i].key === next.k){ nameTr = PRAYERS[i].tr; break; } }
     el("nextPrayer").textContent = nameTr + " • " + (next.time || "--:--");
     el("countdown").textContent = fmtHMS(next.at.getTime() - now.getTime());
 
-    // highlight next tile
+    // highlight next
     var tiles = document.querySelectorAll(".tile");
     for(i=0;i<tiles.length;i++){ tiles[i].className = tiles[i].className.replace(" active",""); }
     var node = document.querySelector('.tile[data-key="'+next.k+'"]');
     if(node) node.className += " active";
 
-    // ===== “vakit girdi” tetikleme =====
-    // Her vakit için, tam o dakikaya gelince (hh:mm:00–:02 aralığı) bir kez tetikler.
+    // Trigger “vakit girdi”
     var fired = getFiredMap();
     var day = todayKey();
 
@@ -547,7 +666,6 @@
       var d0 = parseHHMM(now, hhmm);
       var diff = Math.abs(now.getTime() - d0.getTime());
 
-      // Saat tam geldiği anda, iOS timer gecikmeleri için 2.5sn tolerans
       if(diff <= 2500){
         var key = day + "|" + p.key;
         if(!fired[key]){
@@ -559,7 +677,6 @@
     }
   }
 
-  // Init
   el("copyYear").textContent = String((new Date()).getFullYear());
   applyTheme();
 
