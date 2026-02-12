@@ -50,13 +50,13 @@
         linear-gradient(180deg,#050914 0%,#02040a 100%);
     }
 
-    /* Cami silueti daha görünür */
+    /* Cami silueti */
     body:before{
       content:"";
       position:fixed;
       left:0; right:0; bottom:-10px;
       height:55%;
-      opacity:.18; /* 0.10 -> 0.18 */
+      opacity:.18;
       pointer-events:none;
       background-repeat:no-repeat;
       background-position:center bottom;
@@ -86,7 +86,6 @@
   </g>\
 </svg>");
     }
-    /* Silüetin altına hafif glow (daha net görünür) */
     body:after{
       content:"";
       position:fixed;
@@ -154,6 +153,15 @@
       color:rgba(255,255,255,.82);
       white-space:nowrap;
     }
+    .pill.stale{
+      border-color:rgba(255,204,102,.40);
+      background:rgba(255,204,102,.14);
+      color:rgba(255,255,255,.86);
+    }
+    .pill.ok{
+      border-color:rgba(141,255,168,.28);
+      background:rgba(141,255,168,.10);
+    }
     .dot{
       display:inline-block;
       width:8px;height:8px;border-radius:99px;
@@ -173,6 +181,7 @@
       text-align:right;
     }
 
+    /* NEXT */
     .next{
       padding:10px 14px;
       border-radius:20px;
@@ -183,6 +192,8 @@
       align-items:center;
       gap:12px;
       min-height:54px;
+      position:relative;
+      overflow:hidden;
     }
     .label{
       font-size:12px;
@@ -203,6 +214,26 @@
       text-align:right;
     }
 
+    .next.warn{
+      background:linear-gradient(180deg, rgba(255,204,102,.22), rgba(0,0,0,.24));
+      border-color:rgba(255,204,102,.35);
+    }
+    .next.warn:before{
+      content:"YAKLAŞIYOR";
+      position:absolute;
+      right:12px;
+      top:10px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.6px;
+      color:rgba(255,255,255,.82);
+      border:1px solid rgba(255,204,102,.45);
+      background:rgba(255,204,102,.18);
+      padding:4px 8px;
+      border-radius:999px;
+    }
+
+    /* TILES */
     .tilesCard{
       flex:1;
       min-height:0;
@@ -219,11 +250,14 @@
       align-content:stretch;
       margin:-6px;
     }
+
+    /* Default (landscape): 2 sütun 3 satır */
     .tile{
       width:50%;
       height:33.3333%;
       padding:6px;
     }
+
     .tileInner{
       height:100%;
       border-radius:22px;
@@ -260,6 +294,7 @@
       font-variant-numeric:tabular-nums;
       text-shadow:0 3px 18px rgba(0,0,0,.45);
     }
+
     @keyframes pulseGlow{
       0%   { box-shadow:0 0 0 rgba(122,162,255,.0), 0 14px 34px rgba(0,0,0,.40); }
       50%  { box-shadow:0 0 34px rgba(122,162,255,.55), 0 16px 40px rgba(0,0,0,.48); }
@@ -291,6 +326,45 @@
     }
     .rightFooter{ white-space:nowrap; }
 
+    /* ===== PORTRAIT OPTIMIZATION =====
+       Dikey kullanımda kutuları büyüt:
+       - 1 sütun / 6 satır
+       - yazılar daha büyük
+       - header/next biraz daha kompakt
+    */
+    @media (orientation: portrait) {
+      .wrap{ padding:14px; gap:10px; }
+
+      .header{ min-height:70px; padding:10px 12px; }
+      .title{ font-size:20px; }
+      .sub{ font-size:12px; margin-top:5px; }
+      .pill{ font-size:11px; padding:5px 9px; }
+
+      .clock{ font-size:46px; min-width:120px; }
+
+      .next{ padding:10px 12px; min-height:52px; }
+      .nextPrayer{ font-size:20px; }
+      .countdown{ font-size:20px; }
+
+      .tilesCard{ padding:10px; }
+      .tilesWrap{ margin:-6px; }
+
+      /* 1 sütun */
+      .tile{
+        width:100%;
+        height:16.6667%; /* 6 satır */
+        padding:6px;
+      }
+
+      /* Kart + yazı büyüt */
+      .tileInner{
+        border-radius:24px;
+        padding:22px 22px;
+      }
+      .tname{ font-size:28px; }
+      .ttime{ font-size:66px; }
+    }
+
     /* ===== OVERLAY ===== */
     .overlay{
       position:fixed;
@@ -320,7 +394,6 @@
       100%{ box-shadow:0 0 0 rgba(122,162,255,.0), 0 22px 55px rgba(0,0,0,.65); }
     }
 
-    /* Overlay day/night theme */
     .overlay.ov-day{ background:rgba(0,0,0,.62); }
     .overlay.ov-night{ background:rgba(0,0,0,.78); }
 
@@ -341,7 +414,6 @@
       animation:popIn .55s ease-out, overlayPulse 2.2s ease-in-out infinite, gentleShake .45s ease-in-out 2;
     }
 
-    /* Card background differs by theme */
     .overlay.ov-day .ovCard{
       background:
         radial-gradient(circle at 25% 20%, rgba(141,255,168,.24), transparent 50%),
@@ -377,6 +449,14 @@
       color:rgba(255,255,255,.92);
       font-variant-numeric:tabular-nums;
     }
+    .ovMeta{
+      margin-top:10px;
+      font-size:14px;
+      color:rgba(255,255,255,.70);
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+
     .ovHint{
       margin-top:16px;
       font-size:14px;
@@ -399,7 +479,6 @@
       background:linear-gradient(90deg, rgba(122,162,255,.95), rgba(141,255,168,.80), rgba(255,204,102,.80));
     }
 
-    /* quick flash when overlay appears */
     .flash{
       position:fixed; inset:0;
       z-index:9998;
@@ -427,12 +506,13 @@
         <div class="metaRow">
           <div class="pill"><span class="dot"></span><span id="districtPill">İlçe: —</span></div>
           <div class="pill" id="srcPill">Kaynak: —</div>
+          <div class="pill ok" id="freshPill">Veri: kontrol ediliyor…</div>
         </div>
       </div>
       <div class="clock" id="clock">--:--</div>
     </div>
 
-    <div class="next">
+    <div class="next" id="nextCard">
       <div>
         <div class="label">Sıradaki</div>
         <div class="nextPrayer" id="nextPrayer">—</div>
@@ -462,6 +542,7 @@
       <div class="ovSmall">VAKİT GİRDİ</div>
       <div class="ovBig" id="ovPrayer">—</div>
       <div class="ovTime" id="ovTime">--:--</div>
+      <div class="ovMeta" id="ovMeta">Ankara • —</div>
       <div class="ovProgress"><div class="ovBar" id="ovBar"></div></div>
       <div class="ovHint">1 dakika sonra ana ekrana dönülecek…</div>
     </div>
@@ -523,6 +604,19 @@
     xhr.send();
   }
 
+  // data freshness
+  function parseMaybeDate(s){
+    if(!s) return null;
+    var t = Date.parse(s);
+    if(!isNaN(t)) return new Date(t);
+    return null;
+  }
+  function setFreshPill(isStale, text){
+    var p = el("freshPill");
+    p.className = "pill " + (isStale ? "stale" : "ok");
+    p.textContent = text;
+  }
+
   // Overlay
   var overlayTimer = null;
   var progressTimer = null;
@@ -530,28 +624,25 @@
   function triggerFlash(){
     var f = el("flash");
     f.className = "flash";
-    f.offsetHeight; // reflow
+    f.offsetHeight;
     f.className = "flash run";
   }
 
-  function showOverlay(prayerTr, timeHHMM){
-    // theme class for overlay
+  function showOverlay(prayerTr, timeHHMM, dateText){
     var ov = el("overlay");
     ov.className = "overlay show " + (isDayTime() ? "ov-day" : "ov-night");
 
     el("ovPrayer").textContent = prayerTr;
     el("ovTime").textContent = timeHHMM || "--:--";
+    el("ovMeta").textContent = "Ankara • " + (dateText || "");
 
-    // shake reset
     var card = el("ovCard");
     card.className = "ovCard";
     card.offsetHeight;
     card.className = "ovCard shakeOnce";
 
-    // flash
     triggerFlash();
 
-    // Progress bar
     var bar = el("ovBar");
     bar.style.width = "0%";
     var start = (new Date()).getTime();
@@ -574,7 +665,7 @@
     }, 60000);
   }
 
-  // Fire lock per day+prayer
+  // fire lock per day+prayer
   function todayKey(){
     var d = new Date();
     return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
@@ -590,15 +681,30 @@
   }
 
   var data = null;
+  var dateTextForOverlay = "";
 
   function renderTiles(){
     if(!data || !data.today){ setError("Veri yok."); return; }
     var t = data.today;
 
-    el("dateLine").textContent = t.MiladiTarihUzun || t.MiladiTarihKisa || "—";
+    dateTextForOverlay = (t.MiladiTarihUzun || t.MiladiTarihKisa || "");
+    el("dateLine").textContent = dateTextForOverlay || "—";
     el("districtPill").textContent = "İlçe: " + (data.district || "ANKARA");
     el("srcPill").textContent = "Kaynak: " + (data.source || "—");
     el("statusLine").textContent = "Güncelleme: " + (data.generatedAt || "—");
+
+    var gen = parseMaybeDate(data.generatedAt) || parseMaybeDate(data.updatedAt) || parseMaybeDate(data.lastUpdated);
+    if(gen){
+      var ageMs = (new Date()).getTime() - gen.getTime();
+      var ageMin = Math.floor(ageMs / 60000);
+      if(ageMin >= 180){
+        setFreshPill(true, "Veri: eski olabilir (" + ageMin + " dk)");
+      } else {
+        setFreshPill(false, "Veri: güncel (" + ageMin + " dk)");
+      }
+    } else {
+      setFreshPill(false, "Son kontrol: " + fmtClock(new Date()));
+    }
 
     var wrap = el("tilesWrap");
     wrap.innerHTML = "";
@@ -648,7 +754,16 @@
     el("nextPrayer").textContent = nameTr + " • " + (next.time || "--:--");
     el("countdown").textContent = fmtHMS(next.at.getTime() - now.getTime());
 
-    // highlight next
+    // 10 dk kala uyarı
+    var minsLeft = Math.floor((next.at.getTime() - now.getTime()) / 60000);
+    var nextCard = el("nextCard");
+    if(minsLeft >= 0 && minsLeft <= 10){
+      if(nextCard.className.indexOf("warn") === -1) nextCard.className = "next warn";
+    } else {
+      nextCard.className = "next";
+    }
+
+    // highlight next tile
     var tiles = document.querySelectorAll(".tile");
     for(i=0;i<tiles.length;i++){ tiles[i].className = tiles[i].className.replace(" active",""); }
     var node = document.querySelector('.tile[data-key="'+next.k+'"]');
@@ -671,7 +786,7 @@
         if(!fired[key]){
           fired[key] = 1;
           setFiredMap(fired);
-          showOverlay(p.tr, hhmm);
+          showOverlay(p.tr, hhmm, dateTextForOverlay);
         }
       }
     }
@@ -688,6 +803,7 @@
     setInterval(updateLive, 1000);
   }, function(err){
     setError("Veri alınamadı: " + err + " (vakit.json)");
+    setFreshPill(true, "Veri: alınamadı");
   });
 })();
 </script>
