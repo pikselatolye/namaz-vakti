@@ -6,805 +6,292 @@
   <title>Ankara Namaz Vakitleri</title>
 
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Namaz Vakti">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="format-detection" content="telephone=no">
-  <meta name="format-detection" content="date=no">
-  <meta name="format-detection" content="address=no">
-  <meta name="format-detection" content="email=no">
 
   <style>
-    :root{
-      --text:#f5f8ff;
-      --muted:rgba(255,255,255,.76);
-      --border:rgba(255,255,255,.16);
-      --accent:#7aa2ff;
-      --accent2:#8dffa8;
-      --warn:#ffcc66;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    :root {
+      --text: #f5f8ff;
+      --muted: rgba(255, 255, 255, .7);
+      --border: rgba(255, 255, 255, .15);
+      --accent: #7aa2ff;
+      --accent2: #8dffa8;
+      --warn: #ffcc66;
+      --danger: #ff6b6b;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     }
 
-    html, body{ height:100%; }
-    body{
-      margin:0;
-      color:var(--text);
-      overflow:hidden;
-      -webkit-text-size-adjust:100%;
-      text-rendering:optimizeLegibility;
-      background:#050914;
-    }
-    *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-
-    body.theme-day{
-      background:
-        radial-gradient(circle at 18% 10%, rgba(122,162,255,.38), transparent 42%),
-        radial-gradient(circle at 85% 6%, rgba(141,255,168,.22), transparent 45%),
-        radial-gradient(circle at 70% 90%, rgba(255,204,102,.10), transparent 45%),
-        linear-gradient(180deg,#0a1530 0%,#050914 100%);
-    }
-    body.theme-night{
-      background:
-        radial-gradient(circle at 15% 10%, rgba(122,162,255,.22), transparent 45%),
-        radial-gradient(circle at 88% 0%, rgba(122,162,255,.10), transparent 55%),
-        radial-gradient(circle at 60% 95%, rgba(122,162,255,.10), transparent 52%),
-        linear-gradient(180deg,#050914 0%,#02040a 100%);
+    body {
+      margin: 0;
+      color: var(--text);
+      overflow: hidden;
+      background: #050914;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* Cami silueti */
-    body:before{
-      content:"";
-      position:fixed;
-      left:0; right:0; bottom:-10px;
-      height:55%;
-      opacity:.18;
-      pointer-events:none;
-      background-repeat:no-repeat;
-      background-position:center bottom;
-      background-size:cover;
-      background-image:url("data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 400'>\
-  <defs>\
-    <linearGradient id='g' x1='0' x2='0' y1='0' y2='1'>\
-      <stop offset='0' stop-color='%23ffffff' stop-opacity='0.00'/>\
-      <stop offset='1' stop-color='%23ffffff' stop-opacity='0.55'/>\
-    </linearGradient>\
-  </defs>\
-  <g fill='url(%23g)'>\
-    <rect x='0' y='310' width='1200' height='90'/>\
-    <path d='M330 310c0-95 78-170 175-170s175 75 175 170H330z'/>\
-    <rect x='380' y='200' width='250' height='110' rx='10'/>\
-    <rect x='505' y='150' width='6' height='50'/>\
-    <circle cx='508' cy='140' r='12'/>\
-    <path d='M120 310c0-55 45-100 100-100s100 45 100 100H120z'/>\
-    <rect x='170' y='240' width='100' height='70' rx='10'/>\
-    <path d='M880 310c0-55 45-100 100-100s100 45 100 100H880z'/>\
-    <rect x='930' y='240' width='100' height='70' rx='10'/>\
-    <path d='M60 310V120h50l10 30v160H60z'/>\
-    <path d='M1090 310V120h50l10 30v160h-60z'/>\
-    <rect x='72' y='105' width='26' height='15' rx='3'/>\
-    <rect x='1102' y='105' width='26' height='15' rx='3'/>\
-  </g>\
-</svg>");
+    /* Temalar */
+    body.theme-day {
+      background: radial-gradient(circle at 18% 10%, rgba(122,162,255,.3), transparent 40%),
+                  linear-gradient(180deg, #0a1530 0%, #050914 100%);
     }
-    body:after{
-      content:"";
-      position:fixed;
-      left:0; right:0; bottom:0;
-      height:28%;
-      pointer-events:none;
-      background:radial-gradient(circle at 50% 100%, rgba(122,162,255,.20), transparent 55%);
-      opacity:.9;
+    body.theme-night {
+      background: radial-gradient(circle at 15% 10%, rgba(122,162,255,.15), transparent 45%),
+                  linear-gradient(180deg, #050914 0%, #02040a 100%);
     }
 
-    .topbar{
-      height:8px;
-      background:linear-gradient(90deg, rgba(122,162,255,.98), rgba(141,255,168,.92), rgba(255,204,102,.92));
-      opacity:.9;
+    .wrap {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      position: relative;
+      z-index: 1;
     }
 
-    .wrap{
-      height:calc(100% - 8px);
-      padding:16px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      position:relative;
-      z-index:1;
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, .05);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
-    .card{
-      border:1px solid var(--border);
-      border-radius:20px;
-      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.20));
-      box-shadow:0 18px 40px rgba(0,0,0,.45);
+    /* Header */
+    .header {
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
+    .title-area h1 { font-size: 20px; margin: 0; font-weight: 800; }
+    .title-area p { font-size: 12px; margin: 4px 0 0; color: var(--muted); }
+    .clock { font-size: 48px; font-weight: 900; font-variant-numeric: tabular-nums; }
 
-    .header{
-      padding:12px 14px;
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-      min-height:78px;
-    }
-    .title{
-      font-size:22px;
-      font-weight:900;
-      letter-spacing:.2px;
-    }
-    .sub{
-      margin-top:6px;
-      font-size:13px;
-      color:var(--muted);
-      line-height:1.25;
-    }
-    .metaRow{
-      margin-top:8px;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-    .pill{
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(0,0,0,.18);
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:12px;
-      color:rgba(255,255,255,.82);
-      white-space:nowrap;
-    }
-    .pill.stale{
-      border-color:rgba(255,204,102,.40);
-      background:rgba(255,204,102,.14);
-      color:rgba(255,255,255,.86);
-    }
-    .pill.ok{
-      border-color:rgba(141,255,168,.28);
-      background:rgba(141,255,168,.10);
-    }
-    .dot{
-      display:inline-block;
-      width:8px;height:8px;border-radius:99px;
-      background:var(--accent);
-      margin-right:7px;
-      box-shadow:0 0 0 3px rgba(122,162,255,.14);
-      vertical-align:middle;
-    }
-    .clock{
-      font-size:54px;
-      font-weight:900;
-      letter-spacing:1px;
-      line-height:1;
-      font-variant-numeric:tabular-nums;
-      text-shadow:0 3px 18px rgba(0,0,0,.45);
-      min-width:132px;
-      text-align:right;
-    }
+    .pills { display: flex; gap: 6px; margin-top: 8px; }
+    .pill { font-size: 10px; padding: 4px 8px; border-radius: 20px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); }
+    .pill.kerahat { background: rgba(255, 107, 107, 0.2); border-color: var(--danger); color: var(--danger); font-weight: bold; display: none; }
 
-    /* NEXT */
-    .next{
-      padding:10px 14px;
-      border-radius:20px;
-      background:linear-gradient(180deg, rgba(122,162,255,.18), rgba(0,0,0,.22));
-      border:1px solid rgba(255,255,255,.14);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      min-height:54px;
-      position:relative;
-      overflow:hidden;
+    /* Sıradaki Vakit */
+    .next-vakit {
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(90deg, rgba(122,162,255,0.1), transparent);
     }
-    .label{
-      font-size:12px;
-      color:var(--muted);
-      font-weight:800;
-    }
-    .nextPrayer{
-      margin-top:3px;
-      font-size:22px;
-      font-weight:900;
-      letter-spacing:.2px;
-    }
-    .countdown{
-      font-size:22px;
-      font-weight:900;
-      font-variant-numeric:tabular-nums;
-      text-shadow:0 3px 18px rgba(0,0,0,.45);
-      text-align:right;
-    }
+    .next-label { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; }
+    .next-name { font-size: 24px; font-weight: 900; }
+    .countdown { font-size: 28px; font-weight: 900; color: var(--accent2); font-variant-numeric: tabular-nums; }
 
-    .next.warn{
-      background:linear-gradient(180deg, rgba(255,204,102,.22), rgba(0,0,0,.24));
-      border-color:rgba(255,204,102,.35);
+    /* Kutular (Tiles) */
+    .tiles-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 10px;
+      flex: 1;
     }
-    .next.warn:before{
-      content:"YAKLAŞIYOR";
-      position:absolute;
-      right:12px;
-      top:10px;
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.6px;
-      color:rgba(255,255,255,.82);
-      border:1px solid rgba(255,204,102,.45);
-      background:rgba(255,204,102,.18);
-      padding:4px 8px;
-      border-radius:999px;
+    .tile {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      transition: all 0.3s ease;
     }
+    .tile.active {
+      border-color: var(--accent);
+      background: rgba(122, 162, 255, 0.15);
+      box-shadow: 0 0 20px rgba(122, 162, 255, 0.2);
+    }
+    .t-name { font-size: 14px; color: var(--muted); font-weight: 700; }
+    .t-time { font-size: 36px; font-weight: 900; margin-top: 4px; }
 
-    /* TILES */
-    .tilesCard{
-      flex:1;
-      min-height:0;
-      padding:12px;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
+    /* Overlay */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+      display: none; z-index: 100; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
     }
-    .tilesWrap{
-      flex:1;
-      min-height:0;
-      display:flex;
-      flex-wrap:wrap;
-      align-content:stretch;
-      margin:-6px;
-    }
+    .overlay.show { display: flex; }
+    .ov-title { font-size: 18px; color: var(--accent); letter-spacing: 2px; }
+    .ov-name { font-size: 80px; font-weight: 900; margin: 20px 0; }
 
-    /* Default (landscape): 2 sütun 3 satır */
-    .tile{
-      width:50%;
-      height:33.3333%;
-      padding:6px;
-    }
-
-    .tileInner{
-      height:100%;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.14);
-      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.18));
-      box-shadow:0 14px 34px rgba(0,0,0,.40);
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      padding:18px 18px;
-      position:relative;
-      overflow:hidden;
-    }
-    .tileInner:after{
-      content:"";
-      position:absolute;
-      left:-40px; top:-40px;
-      width:180px; height:180px;
-      background:radial-gradient(circle at 30% 30%, rgba(122,162,255,.22), transparent 60%);
-      transform:rotate(18deg);
-      pointer-events:none;
-    }
-    .tname{
-      font-size:22px;
-      font-weight:900;
-      letter-spacing:.2px;
-      color:rgba(255,255,255,.92);
-    }
-    .ttime{
-      font-size:50px;
-      font-weight:900;
-      letter-spacing:1px;
-      line-height:1;
-      font-variant-numeric:tabular-nums;
-      text-shadow:0 3px 18px rgba(0,0,0,.45);
-    }
-
-    @keyframes pulseGlow{
-      0%   { box-shadow:0 0 0 rgba(122,162,255,.0), 0 14px 34px rgba(0,0,0,.40); }
-      50%  { box-shadow:0 0 34px rgba(122,162,255,.55), 0 16px 40px rgba(0,0,0,.48); }
-      100% { box-shadow:0 0 0 rgba(122,162,255,.0), 0 14px 34px rgba(0,0,0,.40); }
-    }
-    .active .tileInner{
-      border-color:rgba(122,162,255,.80);
-      background:linear-gradient(180deg, rgba(122,162,255,.22), rgba(0,0,0,.18));
-      animation:pulseGlow 2.2s ease-in-out infinite;
-    }
-
-    .err{
-      font-size:12px;
-      color:rgba(255,190,190,.98);
-      font-weight:800;
-      padding:0 2px;
-    }
-
-    .footer{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      padding:0 2px;
-      color:rgba(255,255,255,.58);
-      font-size:11px;
-      line-height:1.2;
-      min-height:16px;
-    }
-    .rightFooter{ white-space:nowrap; }
-
-    /* ===== PORTRAIT OPTIMIZATION =====
-       Dikey kullanımda kutuları büyüt:
-       - 1 sütun / 6 satır
-       - yazılar daha büyük
-       - header/next biraz daha kompakt
-    */
     @media (orientation: portrait) {
-      .wrap{ padding:14px; gap:10px; }
-
-      .header{ min-height:70px; padding:10px 12px; }
-      .title{ font-size:20px; }
-      .sub{ font-size:12px; margin-top:5px; }
-      .pill{ font-size:11px; padding:5px 9px; }
-
-      .clock{ font-size:46px; min-width:120px; }
-
-      .next{ padding:10px 12px; min-height:52px; }
-      .nextPrayer{ font-size:20px; }
-      .countdown{ font-size:20px; }
-
-      .tilesCard{ padding:10px; }
-      .tilesWrap{ margin:-6px; }
-
-      /* 1 sütun */
-      .tile{
-        width:100%;
-        height:16.6667%; /* 6 satır */
-        padding:6px;
-      }
-
-      /* Kart + yazı büyüt */
-      .tileInner{
-        border-radius:24px;
-        padding:22px 22px;
-      }
-      .tname{ font-size:28px; }
-      .ttime{ font-size:66px; }
+      .tiles-grid { grid-template-columns: 1fr; grid-template-rows: repeat(6, 1fr); }
+      .t-time { font-size: 42px; }
     }
-
-    /* ===== OVERLAY ===== */
-    .overlay{
-      position:fixed;
-      left:0; top:0; right:0; bottom:0;
-      display:none;
-      z-index:9999;
-      padding:22px;
-      background:rgba(0,0,0,.74);
-    }
-    .overlay.show{ display:block; }
-
-    @keyframes popIn{
-      0%   { transform:scale(.92); opacity:0; }
-      60%  { transform:scale(1.02); opacity:1; }
-      100% { transform:scale(1.00); }
-    }
-    @keyframes gentleShake{
-      0%{ transform:translate3d(0,0,0); }
-      25%{ transform:translate3d(-1px,0,0); }
-      50%{ transform:translate3d(1px,0,0); }
-      75%{ transform:translate3d(-1px,0,0); }
-      100%{ transform:translate3d(0,0,0); }
-    }
-    @keyframes overlayPulse{
-      0%{ box-shadow:0 0 0 rgba(122,162,255,.0), 0 22px 55px rgba(0,0,0,.65); }
-      50%{ box-shadow:0 0 45px rgba(122,162,255,.45), 0 26px 60px rgba(0,0,0,.72); }
-      100%{ box-shadow:0 0 0 rgba(122,162,255,.0), 0 22px 55px rgba(0,0,0,.65); }
-    }
-
-    .overlay.ov-day{ background:rgba(0,0,0,.62); }
-    .overlay.ov-night{ background:rgba(0,0,0,.78); }
-
-    .ovCard{
-      height:100%;
-      border-radius:28px;
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow:0 22px 55px rgba(0,0,0,.65);
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      text-align:center;
-      padding:24px;
-      animation:popIn .55s ease-out, overlayPulse 2.2s ease-in-out infinite;
-    }
-    .ovCard.shakeOnce{
-      animation:popIn .55s ease-out, overlayPulse 2.2s ease-in-out infinite, gentleShake .45s ease-in-out 2;
-    }
-
-    .overlay.ov-day .ovCard{
-      background:
-        radial-gradient(circle at 25% 20%, rgba(141,255,168,.24), transparent 50%),
-        radial-gradient(circle at 85% 15%, rgba(122,162,255,.30), transparent 55%),
-        linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.28));
-      border-color:rgba(141,255,168,.22);
-    }
-    .overlay.ov-night .ovCard{
-      background:
-        radial-gradient(circle at 25% 20%, rgba(122,162,255,.26), transparent 50%),
-        radial-gradient(circle at 85% 15%, rgba(140,120,255,.18), transparent 55%),
-        linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.40));
-      border-color:rgba(122,162,255,.22);
-    }
-
-    .ovSmall{
-      font-size:16px;
-      color:rgba(255,255,255,.82);
-      font-weight:900;
-      letter-spacing:.6px;
-    }
-    .ovBig{
-      margin-top:10px;
-      font-size:74px;
-      font-weight:900;
-      letter-spacing:.6px;
-      text-shadow:0 4px 30px rgba(0,0,0,.55);
-    }
-    .ovTime{
-      margin-top:10px;
-      font-size:34px;
-      font-weight:900;
-      color:rgba(255,255,255,.92);
-      font-variant-numeric:tabular-nums;
-    }
-    .ovMeta{
-      margin-top:10px;
-      font-size:14px;
-      color:rgba(255,255,255,.70);
-      font-weight:800;
-      letter-spacing:.2px;
-    }
-
-    .ovHint{
-      margin-top:16px;
-      font-size:14px;
-      color:rgba(255,255,255,.62);
-      font-weight:800;
-    }
-    .ovProgress{
-      width:78%;
-      max-width:520px;
-      height:8px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background:rgba(0,0,0,.22);
-      overflow:hidden;
-      margin-top:18px;
-    }
-    .ovBar{
-      height:100%;
-      width:0%;
-      background:linear-gradient(90deg, rgba(122,162,255,.95), rgba(141,255,168,.80), rgba(255,204,102,.80));
-    }
-
-    .flash{
-      position:fixed; inset:0;
-      z-index:9998;
-      pointer-events:none;
-      background:rgba(255,255,255,.25);
-      opacity:0;
-    }
-    @keyframes flashAnim{
-      0%{opacity:0;}
-      30%{opacity:1;}
-      100%{opacity:0;}
-    }
-    .flash.run{ animation:flashAnim .45s ease-out 1; }
   </style>
 </head>
-
 <body class="theme-night">
-  <div class="topbar"></div>
 
   <div class="wrap">
     <div class="card header">
-      <div style="min-width:0">
-        <div class="title">Ankara • Namaz Vakitleri</div>
-        <div class="sub" id="dateLine">—</div>
-        <div class="metaRow">
-          <div class="pill"><span class="dot"></span><span id="districtPill">İlçe: —</span></div>
-          <div class="pill" id="srcPill">Kaynak: —</div>
-          <div class="pill ok" id="freshPill">Veri: kontrol ediliyor…</div>
+      <div class="title-area">
+        <h1>Ankara</h1>
+        <p id="dateLine">-- Şubat 2026</p>
+        <div class="pills">
+          <span class="pill" id="statusPill">Yükleniyor...</span>
+          <span class="pill kerahat" id="kerahatPill">⚠ KERAHAT VAKTİ</span>
         </div>
       </div>
-      <div class="clock" id="clock">--:--</div>
+      <div class="clock" id="clock">00:00</div>
     </div>
 
-    <div class="next" id="nextCard">
+    <div class="card next-vakit" id="nextCard">
       <div>
-        <div class="label">Sıradaki</div>
-        <div class="nextPrayer" id="nextPrayer">—</div>
+        <div class="next-label">Sıradaki Vakit</div>
+        <div class="next-name" id="nextName">--</div>
       </div>
-      <div style="text-align:right">
-        <div class="label">Kalan</div>
-        <div class="countdown" id="countdown">--:--:--</div>
+      <div style="text-align: right;">
+        <div class="next-label">Kalan Süre</div>
+        <div class="countdown" id="countdown">00:00:00</div>
       </div>
     </div>
 
-    <div class="card tilesCard">
-      <div class="tilesWrap" id="tilesWrap"></div>
-      <div class="err" id="err"></div>
-    </div>
-
-    <div class="footer">
-      <div id="statusLine">Güncelleme: —</div>
-      <div class="rightFooter">© <span id="copyYear"></span> A. Ensar Kibaroğlu</div>
-    </div>
+    <div class="tiles-grid" id="tilesGrid">
+      </div>
   </div>
 
-  <div class="flash" id="flash"></div>
-
-  <!-- Overlay -->
   <div class="overlay" id="overlay">
-    <div class="ovCard" id="ovCard">
-      <div class="ovSmall">VAKİT GİRDİ</div>
-      <div class="ovBig" id="ovPrayer">—</div>
-      <div class="ovTime" id="ovTime">--:--</div>
-      <div class="ovMeta" id="ovMeta">Ankara • —</div>
-      <div class="ovProgress"><div class="ovBar" id="ovBar"></div></div>
-      <div class="ovHint">1 dakika sonra ana ekrana dönülecek…</div>
-    </div>
+    <div class="ov-title">VAKİT GİRDİ</div>
+    <div class="ov-name" id="ovName">AKŞAM</div>
+    <div style="color: var(--muted);">Aziz Allah...</div>
   </div>
 
 <script>
 (function(){
-  var PRAYERS = [
-    { key:"Imsak", tr:"İmsak" },
-    { key:"Gunes", tr:"Güneş" },
-    { key:"Ogle",  tr:"Öğle"  },
-    { key:"Ikindi",tr:"İkindi"},
-    { key:"Aksam", tr:"Akşam" },
-    { key:"Yatsi", tr:"Yatsı" }
+  const PRAYERS = [
+    { key:"Imsak", tr:"İmsak" }, { key:"Gunes", tr:"Güneş" }, { key:"Ogle", tr:"Öğle" },
+    { key:"Ikindi", tr:"İkindi" }, { key:"Aksam", tr:"Akşam" }, { key:"Yatsi", tr:"Yatsı" }
   ];
-  var NEXT_ORDER = ["Imsak","Ogle","Ikindi","Aksam","Yatsi"];
 
-  function el(id){ return document.getElementById(id); }
-  function pad(n){ n = String(n); return n.length<2 ? "0"+n : n; }
-  function fmtClock(d){ return pad(d.getHours()) + ":" + pad(d.getMinutes()); }
-  function fmtHMS(ms){
-    var s = Math.max(0, Math.floor(ms/1000));
-    var hh = Math.floor(s/3600);
-    var mm = Math.floor((s%3600)/60);
-    var ss = s%60;
-    return pad(hh)+":"+pad(mm)+":"+pad(ss);
-  }
-  function parseHHMM(baseDate, hhmm){
-    var parts = String(hhmm||"0:0").split(":");
-    var hh = parseInt(parts[0],10) || 0;
-    var mm = parseInt(parts[1],10) || 0;
-    var d = new Date(baseDate.getTime());
-    d.setHours(hh, mm, 0, 0);
+  let state = { data: null, lastMinute: -1 };
+
+  const el = id => document.getElementById(id);
+  const pad = n => String(n).padStart(2, '0');
+
+  // Vakti Date objesine çevir (Gece yarısı kontrolü ile)
+  function parseTime(timeStr, baseDate = new Date()) {
+    if(!timeStr) return new Date();
+    const [h, m] = timeStr.split(':').map(Number);
+    const d = new Date(baseDate);
+    d.setHours(h, m, 0, 0);
     return d;
   }
-  function setError(msg){ el("err").textContent = msg || ""; }
 
-  function isDayTime(){
-    var h = (new Date()).getHours();
-    return (h >= 7 && h < 19);
-  }
-  function applyTheme(){
-    document.body.className = isDayTime() ? "theme-day" : "theme-night";
-  }
-
-  function getJSON(url, onOk, onErr){
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
-    xhr.onreadystatechange = function(){
-      if(xhr.readyState !== 4) return;
-      if(xhr.status >= 200 && xhr.status < 300){
-        try{ onOk(JSON.parse(xhr.responseText)); }
-        catch(e){ onErr("JSON parse hatası"); }
-      } else {
-        onErr("HTTP " + xhr.status);
-      }
-    };
-    xhr.onerror = function(){ onErr("Network error"); };
-    xhr.send();
-  }
-
-  // data freshness
-  function parseMaybeDate(s){
-    if(!s) return null;
-    var t = Date.parse(s);
-    if(!isNaN(t)) return new Date(t);
-    return null;
-  }
-  function setFreshPill(isStale, text){
-    var p = el("freshPill");
-    p.className = "pill " + (isStale ? "stale" : "ok");
-    p.textContent = text;
-  }
-
-  // Overlay
-  var overlayTimer = null;
-  var progressTimer = null;
-
-  function triggerFlash(){
-    var f = el("flash");
-    f.className = "flash";
-    f.offsetHeight;
-    f.className = "flash run";
-  }
-
-  function showOverlay(prayerTr, timeHHMM, dateText){
-    var ov = el("overlay");
-    ov.className = "overlay show " + (isDayTime() ? "ov-day" : "ov-night");
-
-    el("ovPrayer").textContent = prayerTr;
-    el("ovTime").textContent = timeHHMM || "--:--";
-    el("ovMeta").textContent = "Ankara • " + (dateText || "");
-
-    var card = el("ovCard");
-    card.className = "ovCard";
-    card.offsetHeight;
-    card.className = "ovCard shakeOnce";
-
-    triggerFlash();
-
-    var bar = el("ovBar");
-    bar.style.width = "0%";
-    var start = (new Date()).getTime();
-
-    if(progressTimer) clearInterval(progressTimer);
-    progressTimer = setInterval(function(){
-      var now = (new Date()).getTime();
-      var pct = Math.min(100, Math.floor(((now - start) / 60000) * 100));
-      bar.style.width = pct + "%";
-      if(pct >= 100){
-        clearInterval(progressTimer);
-        progressTimer = null;
-      }
-    }, 250);
-
-    if(overlayTimer) clearTimeout(overlayTimer);
-    overlayTimer = setTimeout(function(){
-      ov.className = "overlay";
-      if(progressTimer){ clearInterval(progressTimer); progressTimer = null; }
-    }, 60000);
-  }
-
-  // fire lock per day+prayer
-  function todayKey(){
-    var d = new Date();
-    return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
-  }
-  function getFiredMap(){
-    try{
-      var raw = localStorage.getItem("fired_map_v1");
-      return raw ? JSON.parse(raw) : {};
-    }catch(e){ return {}; }
-  }
-  function setFiredMap(m){
-    try{ localStorage.setItem("fired_map_v1", JSON.stringify(m)); }catch(e){}
-  }
-
-  var data = null;
-  var dateTextForOverlay = "";
-
-  function renderTiles(){
-    if(!data || !data.today){ setError("Veri yok."); return; }
-    var t = data.today;
-
-    dateTextForOverlay = (t.MiladiTarihUzun || t.MiladiTarihKisa || "");
-    el("dateLine").textContent = dateTextForOverlay || "—";
-    el("districtPill").textContent = "İlçe: " + (data.district || "ANKARA");
-    el("srcPill").textContent = "Kaynak: " + (data.source || "—");
-    el("statusLine").textContent = "Güncelleme: " + (data.generatedAt || "—");
-
-    var gen = parseMaybeDate(data.generatedAt) || parseMaybeDate(data.updatedAt) || parseMaybeDate(data.lastUpdated);
-    if(gen){
-      var ageMs = (new Date()).getTime() - gen.getTime();
-      var ageMin = Math.floor(ageMs / 60000);
-      if(ageMin >= 180){
-        setFreshPill(true, "Veri: eski olabilir (" + ageMin + " dk)");
-      } else {
-        setFreshPill(false, "Veri: güncel (" + ageMin + " dk)");
-      }
-    } else {
-      setFreshPill(false, "Son kontrol: " + fmtClock(new Date()));
-    }
-
-    var wrap = el("tilesWrap");
-    wrap.innerHTML = "";
-
-    for(var i=0;i<PRAYERS.length;i++){
-      var p = PRAYERS[i];
-      var time = t[p.key] || "--:--";
-
-      var tile = document.createElement("div");
-      tile.className = "tile";
-      tile.setAttribute("data-key", p.key);
-
-      var inner = document.createElement("div");
-      inner.className = "tileInner";
-      inner.innerHTML = '<div class="tname">'+p.tr+'</div><div class="ttime">'+time+'</div>';
-
-      tile.appendChild(inner);
-      wrap.appendChild(tile);
-    }
-    setError("");
-  }
-
-  function updateLive(){
-    applyTheme();
-
-    var now = new Date();
-    el("clock").textContent = fmtClock(now);
-    if(!data || !data.today) return;
-
-    var t = data.today;
-
-    // Next prayer
-    var next = null, i, k, at;
-    for(i=0;i<NEXT_ORDER.length;i++){
-      k = NEXT_ORDER[i];
-      at = parseHHMM(now, t[k]);
-      if(at.getTime() > now.getTime()){ next = { k:k, at:at, time:t[k] }; break; }
-    }
-    if(!next){
-      var tmr = new Date(now.getTime());
-      tmr.setDate(tmr.getDate()+1);
-      next = { k:"Imsak", at: parseHHMM(tmr, t["Imsak"]), time:t["Imsak"] };
-    }
-
-    var nameTr = next.k;
-    for(i=0;i<PRAYERS.length;i++){ if(PRAYERS[i].key === next.k){ nameTr = PRAYERS[i].tr; break; } }
-    el("nextPrayer").textContent = nameTr + " • " + (next.time || "--:--");
-    el("countdown").textContent = fmtHMS(next.at.getTime() - now.getTime());
-
-    // 10 dk kala uyarı
-    var minsLeft = Math.floor((next.at.getTime() - now.getTime()) / 60000);
-    var nextCard = el("nextCard");
-    if(minsLeft >= 0 && minsLeft <= 10){
-      if(nextCard.className.indexOf("warn") === -1) nextCard.className = "next warn";
-    } else {
-      nextCard.className = "next";
-    }
-
-    // highlight next tile
-    var tiles = document.querySelectorAll(".tile");
-    for(i=0;i<tiles.length;i++){ tiles[i].className = tiles[i].className.replace(" active",""); }
-    var node = document.querySelector('.tile[data-key="'+next.k+'"]');
-    if(node) node.className += " active";
-
-    // Trigger “vakit girdi”
-    var fired = getFiredMap();
-    var day = todayKey();
-
-    for(i=0;i<PRAYERS.length;i++){
-      var p = PRAYERS[i];
-      var hhmm = t[p.key];
-      if(!hhmm) continue;
-
-      var d0 = parseHHMM(now, hhmm);
-      var diff = Math.abs(now.getTime() - d0.getTime());
-
-      if(diff <= 2500){
-        var key = day + "|" + p.key;
-        if(!fired[key]){
-          fired[key] = 1;
-          setFiredMap(fired);
-          showOverlay(p.tr, hhmm, dateTextForOverlay);
+  function loadData() {
+    // Netlify cache önlemek için timestamp ekliyoruz
+    fetch(`vakit.json?v=${new Date().getTime()}`)
+      .then(r => r.json())
+      .then(json => {
+        state.data = json;
+        localStorage.setItem('cached_vakit', JSON.stringify(json));
+        init();
+      })
+      .catch(() => {
+        const cached = localStorage.getItem('cached_vakit');
+        if(cached) {
+          state.data = JSON.parse(cached);
+          el('statusPill').textContent = "Çevrimdışı Mod";
+          init();
+        } else {
+          el('statusPill').textContent = "Veri Hatası!";
         }
-      }
+      });
+  }
+
+  function init() {
+    renderTiles();
+    update();
+    setInterval(update, 1000);
+  }
+
+  function renderTiles() {
+    el('tilesGrid').innerHTML = PRAYERS.map(p => `
+      <div class="card tile" id="tile-${p.key}">
+        <div class="t-name">${p.tr}</div>
+        <div class="t-time">${state.data.today[p.key]}</div>
+      </div>
+    `).join('');
+    el('dateLine').textContent = state.data.today.MiladiTarihUzun || "";
+    if(el('statusPill').textContent === "Yükleniyor...") el('statusPill').textContent = "Güncel";
+  }
+
+  function update() {
+    const now = new Date();
+    const currentMin = now.getMinutes();
+
+    // Saniye başı: Saat ve Geri Sayım
+    el('clock').textContent = pad(now.getHours()) + ":" + pad(now.getMinutes());
+    updateCountdown(now);
+
+    // Dakika başı: Kerahat, Tema ve Overlay
+    if (currentMin !== state.lastMinute) {
+      checkSpecialStates(now);
+      state.lastMinute = currentMin;
     }
   }
 
-  el("copyYear").textContent = String((new Date()).getFullYear());
-  applyTheme();
+  function updateCountdown(now) {
+    const times = state.data.today;
+    let next = null;
 
-  setError("Yükleniyor...");
-  getJSON("vakit.json", function(j){
-    data = j;
-    renderTiles();
-    updateLive();
-    setInterval(updateLive, 1000);
-  }, function(err){
-    setError("Veri alınamadı: " + err + " (vakit.json)");
-    setFreshPill(true, "Veri: alınamadı");
-  });
+    // Sıradaki vakti bul (Güneş hariç namaz vakitleri)
+    const order = ["Imsak", "Ogle", "Ikindi", "Aksam", "Yatsi"];
+    for (let key of order) {
+      let t = parseTime(times[key]);
+      if (t > now) { next = { k: key, t: t }; break; }
+    }
+
+    // Gece yarısından sonra Yatsı bittiyse yarına geç
+    if (!next) {
+      let tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      next = { k: "Imsak", t: parseTime(times.Imsak, tomorrow) };
+    }
+
+    const diff = next.t - now;
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    
+    el('countdown').textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
+    const trName = PRAYERS.find(p => p.key === next.k).tr;
+    el('nextName').textContent = trName + " • " + times[next.k];
+
+    // Aktif kutuyu ışıklandır
+    PRAYERS.forEach(p => el(`tile-${p.key}`).classList.remove('active'));
+    el(`tile-${next.k}`).classList.add('active');
+  }
+
+  function checkSpecialStates(now) {
+    const t = state.data.today;
+    
+    // Tema Değişimi
+    const hour = now.getHours();
+    document.body.className = (hour >= 7 && hour < 19) ? "theme-day" : "theme-night";
+
+    // Kerahat Kontrolü (Güneş doğunca +45dk, Akşama -45dk)
+    const gunes = parseTime(t.Gunes);
+    const aksam = parseTime(t.Aksam);
+    const isKerahat = (now > gunes && now < new Date(gunes.getTime() + 45*60000)) || 
+                      (now > new Date(aksam.getTime() - 45*60000) && now < aksam);
+    el('kerahatPill').style.display = isKerahat ? "inline-block" : "none";
+
+    // Overlay (Vakit girdiğinde 1 dk göster)
+    const timeStr = pad(now.getHours()) + ":" + pad(now.getMinutes());
+    PRAYERS.forEach(p => {
+      if(t[p.key] === timeStr) {
+        el('ovName').textContent = p.tr;
+        el('overlay').classList.add('show');
+        setTimeout(() => el('overlay').classList.remove('show'), 60000);
+      }
+    });
+  }
+
+  loadData();
 })();
 </script>
 </body>
