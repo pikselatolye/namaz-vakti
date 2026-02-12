@@ -28,45 +28,43 @@
       height: 100vh; padding: 2vh; gap: 1.5vh;
     }
 
-    /* Üst Başlık Alanı */
+    /* Üst Başlık */
     .header {
       height: 16vh; display: flex; justify-content: space-between; align-items: center;
       padding: 0 4vh; background: var(--card-bg); border-radius: 2.5vh;
     }
-    .clock { font-size: 10vh; font-weight: 900; font-variant-numeric: tabular-nums; letter-spacing: -2px; }
-    .title-area h1 { font-size: 4vh; margin: 0; font-weight: 800; }
+    .clock { font-size: 10vh; font-weight: 900; font-variant-numeric: tabular-nums; }
+    .title-area h1 { font-size: 3.8vh; margin: 0; font-weight: 800; }
     .title-area p { font-size: 2vh; color: var(--muted); margin: 0.5vh 0; }
 
-    /* Sıradaki Vakit Kartı */
+    /* Sıradaki Vakit */
     .next-vakit {
-      height: 14vh; display: flex; justify-content: space-between; align-items: center;
+      height: 13vh; display: flex; justify-content: space-between; align-items: center;
       padding: 0 5vh; background: rgba(122,162,255,0.12); border-radius: 2.5vh;
-      border: 1px solid rgba(122,162,255,0.25);
+      border: 1px solid rgba(122,162,255,0.2);
     }
-    .next-name { font-size: 5vh; font-weight: 900; }
-    .countdown { font-size: 6.5vh; font-weight: 900; color: var(--accent2); font-variant-numeric: tabular-nums; }
+    .next-name { font-size: 4.5vh; font-weight: 900; }
+    .countdown { font-size: 6vh; font-weight: 900; color: var(--accent2); }
 
-    /* Vakit Kutuları - ANA DEĞİŞİKLİK BURADA */
+    /* Vakit Kutuları */
     .tiles-grid {
-      flex: 1; display: grid; gap: 1.5vh;
-      /* Varsayılan: Tek sütun (Dikey mod için) */
-      grid-template-columns: 1fr;
+      flex: 1; display: grid; gap: 1.2vh;
+      grid-template-columns: 1fr; /* Dikeyde tek sütun */
     }
 
     .tile {
-      background: var(--card-bg); border-radius: 2.5vh;
-      display: flex; flex-direction: row; /* İsim ve saat her zaman yan yana */
+      background: var(--card-bg); border-radius: 2.2vh;
+      display: flex; flex-direction: row; /* HER ZAMAN YAN YANA */
       justify-content: space-between; align-items: center;
       padding: 0 5vh; border: 1px solid rgba(255,255,255,0.05);
     }
 
     .tile.active {
       border: 3px solid var(--accent);
-      background: rgba(122, 162, 255, 0.18);
-      box-shadow: 0 0 25px rgba(122,162,255,0.2);
+      background: rgba(122, 162, 255, 0.15);
     }
 
-    .t-name { font-size: 4.5vh; font-weight: 700; color: var(--text); }
+    .t-name { font-size: 4.2vh; font-weight: 700; color: var(--text); }
     .t-time { font-size: 8vh; font-weight: 900; color: var(--accent); }
 
     /* iPad 2 Yatay (Landscape) için 2 sütunlu düzen */
@@ -75,12 +73,13 @@
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: repeat(3, 1fr);
       }
-      .t-time { font-size: 8.5vh; } /* Yatayda daha da büyütebiliriz */
+      .t-time { font-size: 8.5vh; }
     }
 
+    .pill { font-size: 1.6vh; padding: 0.5vh 1.5vh; border-radius: 1vh; background: rgba(255,255,255,0.05); color: var(--muted); }
     .kerahat-pill {
       font-size: 2vh; font-weight: bold; color: var(--danger);
-      background: rgba(255,107,107,0.15); border: 1px solid var(--danger);
+      background: rgba(255,107,107,0.1); border: 1px solid var(--danger);
       padding: 0.5vh 2vh; border-radius: 1.5vh; display: none; margin-top: 1vh;
     }
 
@@ -100,18 +99,21 @@
       <div class="title-area">
         <h1>Ankara Namaz Vakitleri</h1>
         <p id="dateLine">-- Şubat 2026</p>
-        <div id="kerahatPill" class="kerahat-pill">⚠️ KERAHAT VAKTİ</div>
+        <div style="display:flex; gap:1vh;">
+          <span class="pill" id="updateInfo">Güncelleniyor...</span>
+          <div id="kerahatPill" class="kerahat-pill">⚠️ KERAHAT VAKTİ</div>
+        </div>
       </div>
       <div class="clock" id="clock">00:00</div>
     </div>
 
     <div class="next-vakit">
       <div>
-        <div style="font-size:1.8vh; color:var(--muted); font-weight:800; letter-spacing:1px;">SIRADAKİ</div>
+        <div style="font-size:1.8vh; color:var(--muted); font-weight:800;">SIRADAKİ</div>
         <div class="next-name" id="nextName">--</div>
       </div>
       <div style="text-align: right;">
-        <div style="font-size:1.8vh; color:var(--muted); font-weight:800; letter-spacing:1px;">KALAN</div>
+        <div style="font-size:1.8vh; color:var(--muted); font-weight:800;">KALAN</div>
         <div class="countdown" id="countdown">00:00:00</div>
       </div>
     </div>
@@ -121,8 +123,7 @@
   </div>
 
   <div class="overlay" id="overlay">
-    <div style="font-size: 5vh; color: var(--accent);">AZİZ ALLAH...</div>
-    <div style="font-size: 14vh; font-weight: 900; color: #fff; margin: 3vh 0;" id="ovName">--</div>
+    <div style="font-size: 14vh; font-weight: 900; color: var(--accent);" id="ovName">--</div>
     <div style="font-size: 4vh; color: var(--muted);">Vakit Girdi</div>
   </div>
 
@@ -146,7 +147,10 @@
         tick();
         setInterval(tick, 1000);
       })
-      .catch(e => console.error("Veri yüklenemedi"));
+      .catch(() => {
+        const cached = localStorage.getItem('cached_vakit');
+        if(cached) { state.data = JSON.parse(cached); render(); tick(); setInterval(tick, 1000); }
+      });
   }
 
   function render() {
@@ -157,6 +161,7 @@
       </div>
     `).join('');
     el('dateLine').textContent = state.data.today.MiladiTarihUzun || "";
+    el('updateInfo').textContent = "Veri Kaynağı: Ankara";
   }
 
   function tick() {
@@ -180,7 +185,6 @@
       next = { k: "Imsak", t: new Date(tomorrow.setHours(h, m, 0, 0)) };
     }
 
-    // Geri sayım
     const diff = next.t - now;
     const h = Math.floor(diff / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
@@ -188,24 +192,21 @@
     el('countdown').textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
     el('nextName').textContent = PRAYERS.find(p => p.key === next.k).tr + " • " + times[next.k];
 
-    // Aktif durum
     PRAYERS.forEach(p => el(`tile-${p.key}`).classList.remove('active'));
     el(`tile-${next.k}`).classList.add('active');
 
-    // Dakika başı tetiklemeler
     if (now.getMinutes() !== state.lastMin) {
       state.lastMin = now.getMinutes();
-      
-      // Kerahat Kontrol
+      // Kerahat
       const [gh, gm] = times.Gunes.split(':').map(Number);
       const [ah, am] = times.Aksam.split(':').map(Number);
-      const gunesTime = new Date(now).setHours(gh, gm, 0, 0);
-      const aksamTime = new Date(now).setHours(ah, am, 0, 0);
-      const isKerahat = (now > gunesTime && now < (gunesTime + 45*60000)) || 
-                        (now > (aksamTime - 45*60000) && now < aksamTime);
+      const gunesT = new Date(now).setHours(gh, gm, 0, 0);
+      const aksamT = new Date(now).setHours(ah, am, 0, 0);
+      const isKerahat = (now > gunesT && now < (gunesT + 45*60000)) || 
+                        (now > (aksamT - 45*60000) && now < aksamT);
       el('kerahatPill').style.display = isKerahat ? "block" : "none";
 
-      // Vakit Girdi Bildirimi
+      // Vakit Girdi
       PRAYERS.forEach(p => {
         if(times[p.key] === clockStr) {
           el('ovName').textContent = p.tr;
