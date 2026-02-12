@@ -3,143 +3,137 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Ankara Namaz Vakitleri</title>
-
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-
+  <title>Ankara Namaz Vakitleri - iPad Pro</title>
   <style>
     :root {
+      --bg: #050914;
+      --card-bg: rgba(255, 255, 255, 0.08);
       --text: #f5f8ff;
-      --muted: rgba(255, 255, 255, .7);
-      --border: rgba(255, 255, 255, .15);
+      --muted: rgba(255, 255, 255, 0.6);
       --accent: #7aa2ff;
       --accent2: #8dffa8;
-      --warn: #ffcc66;
       --danger: #ff6b6b;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
+
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
+      padding: 0;
+      background: var(--bg);
       color: var(--text);
-      overflow: hidden;
-      background: #050914;
       height: 100vh;
+      width: 100vw;
+      overflow: hidden; /* Kaydırmayı engelle */
       display: flex;
       flex-direction: column;
-    }
-
-    /* Temalar */
-    body.theme-day {
-      background: radial-gradient(circle at 18% 10%, rgba(122,162,255,.3), transparent 40%),
-                  linear-gradient(180deg, #0a1530 0%, #050914 100%);
-    }
-    body.theme-night {
-      background: radial-gradient(circle at 15% 10%, rgba(122,162,255,.15), transparent 45%),
-                  linear-gradient(180deg, #050914 0%, #02040a 100%);
     }
 
     .wrap {
-      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      flex: 1;
-      position: relative;
-      z-index: 1;
+      height: 100vh;
+      padding: 1.5vh;
+      gap: 1.5vh;
     }
 
-    .card {
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      background: rgba(255, 255, 255, .05);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    /* Header */
+    /* Üst Panel - Yüksekliğin %18'i */
     .header {
-      padding: 16px;
+      height: 18vh;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 0 3vh;
+      background: var(--card-bg);
+      border-radius: 2vh;
+      border: 1px solid rgba(255,255,255,0.1);
     }
-    .title-area h1 { font-size: 20px; margin: 0; font-weight: 800; }
-    .title-area p { font-size: 12px; margin: 4px 0 0; color: var(--muted); }
-    .clock { font-size: 48px; font-weight: 900; font-variant-numeric: tabular-nums; }
+    .title-area h1 { font-size: 4vh; margin: 0; font-weight: 800; }
+    .title-area p { font-size: 2vh; margin: 0.5vh 0; color: var(--muted); }
+    .clock { font-size: 9vh; font-weight: 900; font-variant-numeric: tabular-nums; color: var(--text); }
 
-    .pills { display: flex; gap: 6px; margin-top: 8px; }
-    .pill { font-size: 10px; padding: 4px 8px; border-radius: 20px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); }
-    .pill.kerahat { background: rgba(255, 107, 107, 0.2); border-color: var(--danger); color: var(--danger); font-weight: bold; display: none; }
-
-    /* Sıradaki Vakit */
+    /* Sıradaki Vakit - Yüksekliğin %12'si */
     .next-vakit {
-      padding: 16px;
+      height: 12vh;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: linear-gradient(90deg, rgba(122,162,255,0.1), transparent);
+      padding: 0 4vh;
+      background: linear-gradient(90deg, rgba(122,162,255,0.15), transparent);
+      border-radius: 2vh;
+      border: 1px solid rgba(122,162,255,0.2);
     }
-    .next-label { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; }
-    .next-name { font-size: 24px; font-weight: 900; }
-    .countdown { font-size: 28px; font-weight: 900; color: var(--accent2); font-variant-numeric: tabular-nums; }
+    .next-label { font-size: 1.8vh; font-weight: 800; color: var(--accent); text-transform: uppercase; }
+    .next-name { font-size: 4.5vh; font-weight: 900; }
+    .countdown { font-size: 5.5vh; font-weight: 900; color: var(--accent2); }
 
-    /* Kutular (Tiles) */
+    /* Kutular Izgarası - Geriye kalan %65-70'i kaplar */
     .tiles-grid {
+      flex: 1;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: repeat(3, 1fr);
-      gap: 10px;
-      flex: 1;
+      gap: 1.5vh;
     }
+
     .tile {
-      padding: 16px;
+      background: var(--card-bg);
+      border-radius: 2.5vh;
+      border: 1px solid rgba(255,255,255,0.1);
       display: flex;
-      flex-direction: column;
-      justify-content: center;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4vh;
       transition: all 0.3s ease;
     }
+
     .tile.active {
-      border-color: var(--accent);
-      background: rgba(122, 162, 255, 0.15);
-      box-shadow: 0 0 20px rgba(122, 162, 255, 0.2);
+      border: 3px solid var(--accent);
+      background: rgba(122, 162, 255, 0.1);
     }
-    .t-name { font-size: 14px; color: var(--muted); font-weight: 700; }
-    .t-time { font-size: 36px; font-weight: 900; margin-top: 4px; }
+
+    .t-name { font-size: 4vh; font-weight: 700; color: var(--muted); }
+    .t-time { font-size: 8vh; font-weight: 900; }
+
+    /* Pills */
+    .pill { font-size: 1.6vh; padding: 0.5vh 1.5vh; border-radius: 1vh; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); margin-right: 1vh; }
+    .pill.kerahat { background: rgba(255, 107, 107, 0.2); color: var(--danger); border-color: var(--danger); display: none; }
 
     /* Overlay */
     .overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.95);
       display: none; z-index: 100; flex-direction: column;
-      align-items: center; justify-content: center; text-align: center;
+      align-items: center; justify-content: center;
     }
     .overlay.show { display: flex; }
-    .ov-title { font-size: 18px; color: var(--accent); letter-spacing: 2px; }
-    .ov-name { font-size: 80px; font-weight: 900; margin: 20px 0; }
+    .ov-name { font-size: 12vh; font-weight: 900; color: var(--accent); }
 
+    /* Portre Modu (iPad dikey tutulursa) */
     @media (orientation: portrait) {
       .tiles-grid { grid-template-columns: 1fr; grid-template-rows: repeat(6, 1fr); }
-      .t-time { font-size: 42px; }
+      .tile { padding: 0 5vh; }
+      .t-time { font-size: 7vh; }
     }
   </style>
 </head>
-<body class="theme-night">
+<body>
 
   <div class="wrap">
-    <div class="card header">
+    <div class="header">
       <div class="title-area">
         <h1>Ankara</h1>
         <p id="dateLine">-- Şubat 2026</p>
-        <div class="pills">
-          <span class="pill" id="statusPill">Yükleniyor...</span>
-          <span class="pill kerahat" id="kerahatPill">⚠ KERAHAT VAKTİ</span>
+        <div style="display:flex; margin-top:1vh;">
+          <span class="pill" id="statusPill">...</span>
+          <span class="pill kerahat" id="kerahatPill">⚠️ KERAHAT</span>
         </div>
       </div>
       <div class="clock" id="clock">00:00</div>
     </div>
 
-    <div class="card next-vakit" id="nextCard">
+    <div class="next-vakit">
       <div>
         <div class="next-label">Sıradaki Vakit</div>
         <div class="next-name" id="nextName">--</div>
@@ -155,9 +149,8 @@
   </div>
 
   <div class="overlay" id="overlay">
-    <div class="ov-title">VAKİT GİRDİ</div>
-    <div class="ov-name" id="ovName">AKŞAM</div>
-    <div style="color: var(--muted);">Aziz Allah...</div>
+    <div style="font-size: 4vh; color: var(--muted);">VAKİT GİRDİ</div>
+    <div class="ov-name" id="ovName">--</div>
   </div>
 
 <script>
@@ -168,11 +161,9 @@
   ];
 
   let state = { data: null, lastMinute: -1 };
-
   const el = id => document.getElementById(id);
   const pad = n => String(n).padStart(2, '0');
 
-  // Vakti Date objesine çevir (Gece yarısı kontrolü ile)
   function parseTime(timeStr, baseDate = new Date()) {
     if(!timeStr) return new Date();
     const [h, m] = timeStr.split(':').map(Number);
@@ -182,7 +173,6 @@
   }
 
   function loadData() {
-    // Netlify cache önlemek için timestamp ekliyoruz
     fetch(`vakit.json?v=${new Date().getTime()}`)
       .then(r => r.json())
       .then(json => {
@@ -194,61 +184,43 @@
         const cached = localStorage.getItem('cached_vakit');
         if(cached) {
           state.data = JSON.parse(cached);
-          el('statusPill').textContent = "Çevrimdışı Mod";
+          el('statusPill').textContent = "OFFLINE";
           init();
-        } else {
-          el('statusPill').textContent = "Veri Hatası!";
         }
       });
   }
 
   function init() {
     renderTiles();
-    update();
-    setInterval(update, 1000);
+    loop();
+    setInterval(loop, 1000);
   }
 
   function renderTiles() {
     el('tilesGrid').innerHTML = PRAYERS.map(p => `
-      <div class="card tile" id="tile-${p.key}">
+      <div class="tile" id="tile-${p.key}">
         <div class="t-name">${p.tr}</div>
         <div class="t-time">${state.data.today[p.key]}</div>
       </div>
     `).join('');
     el('dateLine').textContent = state.data.today.MiladiTarihUzun || "";
-    if(el('statusPill').textContent === "Yükleniyor...") el('statusPill').textContent = "Güncel";
+    if(el('statusPill').textContent === "...") el('statusPill').textContent = "GÜNCEL";
   }
 
-  function update() {
+  function loop() {
     const now = new Date();
-    const currentMin = now.getMinutes();
-
-    // Saniye başı: Saat ve Geri Sayım
     el('clock').textContent = pad(now.getHours()) + ":" + pad(now.getMinutes());
-    updateCountdown(now);
-
-    // Dakika başı: Kerahat, Tema ve Overlay
-    if (currentMin !== state.lastMinute) {
-      checkSpecialStates(now);
-      state.lastMinute = currentMin;
-    }
-  }
-
-  function updateCountdown(now) {
+    
+    // Geri Sayım
     const times = state.data.today;
     let next = null;
-
-    // Sıradaki vakti bul (Güneş hariç namaz vakitleri)
     const order = ["Imsak", "Ogle", "Ikindi", "Aksam", "Yatsi"];
     for (let key of order) {
       let t = parseTime(times[key]);
       if (t > now) { next = { k: key, t: t }; break; }
     }
-
-    // Gece yarısından sonra Yatsı bittiyse yarına geç
     if (!next) {
-      let tomorrow = new Date(now);
-      tomorrow.setDate(tomorrow.getDate() + 1);
+      let tomorrow = new Date(now); tomorrow.setDate(tomorrow.getDate() + 1);
       next = { k: "Imsak", t: parseTime(times.Imsak, tomorrow) };
     }
 
@@ -256,39 +228,31 @@
     const h = Math.floor(diff / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
     const s = Math.floor((diff % 60000) / 1000);
-    
     el('countdown').textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
-    const trName = PRAYERS.find(p => p.key === next.k).tr;
-    el('nextName').textContent = trName + " • " + times[next.k];
+    el('nextName').textContent = PRAYERS.find(p => p.key === next.k).tr;
 
-    // Aktif kutuyu ışıklandır
+    // Aktif Kutuyu İşaretle
     PRAYERS.forEach(p => el(`tile-${p.key}`).classList.remove('active'));
     el(`tile-${next.k}`).classList.add('active');
-  }
 
-  function checkSpecialStates(now) {
-    const t = state.data.today;
-    
-    // Tema Değişimi
-    const hour = now.getHours();
-    document.body.className = (hour >= 7 && hour < 19) ? "theme-day" : "theme-night";
+    // Dakika başı kontroller (Kerahat & Overlay)
+    if (now.getMinutes() !== state.lastMinute) {
+      const gunes = parseTime(times.Gunes);
+      const aksam = parseTime(times.Aksam);
+      const isKerahat = (now > gunes && now < new Date(gunes.getTime() + 45*60000)) || 
+                        (now > new Date(aksam.getTime() - 45*60000) && now < aksam);
+      el('kerahatPill').style.display = isKerahat ? "inline-block" : "none";
 
-    // Kerahat Kontrolü (Güneş doğunca +45dk, Akşama -45dk)
-    const gunes = parseTime(t.Gunes);
-    const aksam = parseTime(t.Aksam);
-    const isKerahat = (now > gunes && now < new Date(gunes.getTime() + 45*60000)) || 
-                      (now > new Date(aksam.getTime() - 45*60000) && now < aksam);
-    el('kerahatPill').style.display = isKerahat ? "inline-block" : "none";
-
-    // Overlay (Vakit girdiğinde 1 dk göster)
-    const timeStr = pad(now.getHours()) + ":" + pad(now.getMinutes());
-    PRAYERS.forEach(p => {
-      if(t[p.key] === timeStr) {
-        el('ovName').textContent = p.tr;
-        el('overlay').classList.add('show');
-        setTimeout(() => el('overlay').classList.remove('show'), 60000);
-      }
-    });
+      const timeStr = pad(now.getHours()) + ":" + pad(now.getMinutes());
+      PRAYERS.forEach(p => {
+        if(times[p.key] === timeStr) {
+          el('ovName').textContent = p.tr;
+          el('overlay').classList.add('show');
+          setTimeout(() => el('overlay').classList.remove('show'), 60000);
+        }
+      });
+      state.lastMinute = now.getMinutes();
+    }
   }
 
   loadData();
