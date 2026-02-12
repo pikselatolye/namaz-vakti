@@ -1,6 +1,37 @@
-[build]
-  command = "node build.js"
-  publish = "dist"
+# Netlify Yapılandırma Dosyası
 
-[build.environment]
-  NODE_VERSION = "18"
+[build]
+  # Sitenin ana dizini (index.html, build.js burada olmalı)
+  publish = "."
+  
+  # GitHub'a her push yapıldığında vakitleri otomatik güncellemesi için 
+  # Eğer bir build scriptin varsa buraya 'node build.js' yazabilirsin.
+  command = "node build.js"
+
+# --- ÖNBELLEK (CACHE) YÖNETİMİ ---
+# vakit.json dosyasının tarayıcı tarafından asla saklanmamasını, 
+# her seferinde sunucudan taze istenmesini sağlar.
+[[headers]]
+  for = "/vakit.json"
+  [headers.values]
+    cache-control = "no-cache, no-store, must-revalidate"
+    pragma = "no-cache"
+    expires = "0"
+    access-control-allow-origin = "*"
+
+# --- GÜVENLİK VE PERFORMANS ---
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    # Sitenin hızlı yüklenmesi için sıkıştırma desteği
+    X-Content-Type-Options = "nosniff"
+
+# --- YÖNLENDİRMELER (Opsiyonel) ---
+# Eğer ileride SPA (Single Page App) yapısına geçersen 
+# tüm rotaları index.html'e yönlendirir.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
