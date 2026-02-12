@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Ankara Namaz Vakitleri - iPad Pro</title>
+  <title>Ankara Namaz Vakitleri</title>
   <style>
     :root {
       --bg: #050914;
-      --card-bg: rgba(255, 255, 255, 0.08);
+      --card-bg: rgba(255, 255, 255, 0.07);
       --text: #f5f8ff;
-      --muted: rgba(255, 255, 255, 0.5);
+      --muted: rgba(255, 255, 255, 0.45);
       --accent: #7aa2ff;
       --accent2: #8dffa8;
       --danger: #ff6b6b;
@@ -25,52 +25,64 @@
 
     .wrap {
       display: flex; flex-direction: column;
-      height: 100vh; padding: 1.5vh; gap: 1.2vh;
+      height: 100vh; padding: 2vh; gap: 1.5vh;
     }
 
-    /* Üst Panel */
+    /* Üst Başlık Alanı */
     .header {
       height: 16vh; display: flex; justify-content: space-between; align-items: center;
-      padding: 0 3vh; background: var(--card-bg); border-radius: 2vh;
+      padding: 0 4vh; background: var(--card-bg); border-radius: 2.5vh;
     }
-    .clock { font-size: 9vh; font-weight: 900; font-variant-numeric: tabular-nums; }
-    .title-area h1 { font-size: 3.5vh; margin: 0; }
-    .title-area p { font-size: 1.8vh; color: var(--muted); margin-top: 0.5vh; }
+    .clock { font-size: 10vh; font-weight: 900; font-variant-numeric: tabular-nums; letter-spacing: -2px; }
+    .title-area h1 { font-size: 4vh; margin: 0; font-weight: 800; }
+    .title-area p { font-size: 2vh; color: var(--muted); margin: 0.5vh 0; }
 
-    /* Sıradaki Vakit */
+    /* Sıradaki Vakit Kartı */
     .next-vakit {
       height: 14vh; display: flex; justify-content: space-between; align-items: center;
-      padding: 0 4vh; background: rgba(122,162,255,0.1); border-radius: 2vh;
-      border: 1px solid rgba(122,162,255,0.2);
+      padding: 0 5vh; background: rgba(122,162,255,0.12); border-radius: 2.5vh;
+      border: 1px solid rgba(122,162,255,0.25);
     }
-    .next-name { font-size: 4.5vh; font-weight: 900; }
-    .countdown { font-size: 6vh; font-weight: 900; color: var(--accent2); }
+    .next-name { font-size: 5vh; font-weight: 900; }
+    .countdown { font-size: 6.5vh; font-weight: 900; color: var(--accent2); font-variant-numeric: tabular-nums; }
 
-    /* Kutular - Dikeyde bile yan yana düzen */
+    /* Vakit Kutuları - ANA DEĞİŞİKLİK BURADA */
     .tiles-grid {
-      flex: 1; display: grid;
-      grid-template-columns: 1fr; /* Her satıra 1 kutu */
-      grid-template-rows: repeat(6, 1fr); /* 6 vakit için 6 satır */
-      gap: 1vh;
+      flex: 1; display: grid; gap: 1.5vh;
+      /* Varsayılan: Tek sütun (Dikey mod için) */
+      grid-template-columns: 1fr;
     }
 
     .tile {
-      background: var(--card-bg); border-radius: 2vh;
-      display: flex; flex-direction: row; /* İsim ve vakit her zaman yan yana */
+      background: var(--card-bg); border-radius: 2.5vh;
+      display: flex; flex-direction: row; /* İsim ve saat her zaman yan yana */
       justify-content: space-between; align-items: center;
-      padding: 0 4vh; border: 1px solid rgba(255,255,255,0.05);
+      padding: 0 5vh; border: 1px solid rgba(255,255,255,0.05);
     }
 
     .tile.active {
-      border: 2px solid var(--accent);
-      background: rgba(122, 162, 255, 0.15);
+      border: 3px solid var(--accent);
+      background: rgba(122, 162, 255, 0.18);
+      box-shadow: 0 0 25px rgba(122,162,255,0.2);
     }
 
-    .t-name { font-size: 3.5vh; font-weight: 700; color: var(--text); }
-    .t-time { font-size: 6.5vh; font-weight: 900; color: var(--accent); }
+    .t-name { font-size: 4.5vh; font-weight: 700; color: var(--text); }
+    .t-time { font-size: 8vh; font-weight: 900; color: var(--accent); }
 
-    .pill { font-size: 1.5vh; padding: 0.4vh 1.2vh; border-radius: 1vh; background: rgba(0,0,0,0.3); margin-right: 1vh; }
-    .pill.kerahat { background: rgba(255, 107, 107, 0.2); color: var(--danger); display: none; }
+    /* iPad 2 Yatay (Landscape) için 2 sütunlu düzen */
+    @media (orientation: landscape) {
+      .tiles-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+      }
+      .t-time { font-size: 8.5vh; } /* Yatayda daha da büyütebiliriz */
+    }
+
+    .kerahat-pill {
+      font-size: 2vh; font-weight: bold; color: var(--danger);
+      background: rgba(255,107,107,0.15); border: 1px solid var(--danger);
+      padding: 0.5vh 2vh; border-radius: 1.5vh; display: none; margin-top: 1vh;
+    }
 
     /* Overlay */
     .overlay {
@@ -79,15 +91,6 @@
       align-items: center; justify-content: center;
     }
     .overlay.show { display: flex; }
-
-    /* iPad 2 Yatay (Landscape) için 2 sütunlu düzen */
-    @media (orientation: landscape) {
-      .tiles-grid {
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(3, 1fr);
-      }
-      .t-time { font-size: 7vh; }
-    }
   </style>
 </head>
 <body>
@@ -95,23 +98,20 @@
   <div class="wrap">
     <div class="header">
       <div class="title-area">
-        <h1 id="cityTitle">Ankara</h1>
+        <h1>Ankara Namaz Vakitleri</h1>
         <p id="dateLine">-- Şubat 2026</p>
-        <div style="display:flex; margin-top:1vh;">
-          <span class="pill" id="updatePill">Güncelleniyor...</span>
-          <span class="pill kerahat" id="kerahatPill">⚠️ KERAHAT</span>
-        </div>
+        <div id="kerahatPill" class="kerahat-pill">⚠️ KERAHAT VAKTİ</div>
       </div>
       <div class="clock" id="clock">00:00</div>
     </div>
 
     <div class="next-vakit">
       <div>
-        <div style="font-size:1.8vh; color:var(--muted); font-weight:800;">SIRADAKİ</div>
+        <div style="font-size:1.8vh; color:var(--muted); font-weight:800; letter-spacing:1px;">SIRADAKİ</div>
         <div class="next-name" id="nextName">--</div>
       </div>
       <div style="text-align: right;">
-        <div style="font-size:1.8vh; color:var(--muted); font-weight:800;">KALAN</div>
+        <div style="font-size:1.8vh; color:var(--muted); font-weight:800; letter-spacing:1px;">KALAN</div>
         <div class="countdown" id="countdown">00:00:00</div>
       </div>
     </div>
@@ -121,8 +121,9 @@
   </div>
 
   <div class="overlay" id="overlay">
-    <div style="font-size: 4vh; color: var(--muted);">VAKİT GİRDİ</div>
-    <div style="font-size: 12vh; font-weight: 900; color: var(--accent);" id="ovName">--</div>
+    <div style="font-size: 5vh; color: var(--accent);">AZİZ ALLAH...</div>
+    <div style="font-size: 14vh; font-weight: 900; color: #fff; margin: 3vh 0;" id="ovName">--</div>
+    <div style="font-size: 4vh; color: var(--muted);">Vakit Girdi</div>
   </div>
 
 <script>
@@ -132,33 +133,23 @@
     { key:"Ikindi", tr:"İkindi" }, { key:"Aksam", tr:"Akşam" }, { key:"Yatsi", tr:"Yatsı" }
   ];
 
-  let state = { data: null, lastMinute: -1 };
+  let state = { data: null, lastMin: -1 };
   const el = id => document.getElementById(id);
   const pad = n => String(n).padStart(2, '0');
 
   function loadData() {
-    fetch(`vakit.json?v=${new Date().getTime()}`)
+    fetch(`vakit.json?v=${Date.now()}`)
       .then(r => r.json())
       .then(json => {
         state.data = json;
-        init();
+        render();
+        tick();
+        setInterval(tick, 1000);
       })
-      .catch(() => {
-        const cached = localStorage.getItem('cached_vakit');
-        if(cached) {
-          state.data = JSON.parse(cached);
-          init();
-        }
-      });
+      .catch(e => console.error("Veri yüklenemedi"));
   }
 
-  function init() {
-    renderTiles();
-    loop();
-    setInterval(loop, 1000);
-  }
-
-  function renderTiles() {
+  function render() {
     el('tilesGrid').innerHTML = PRAYERS.map(p => `
       <div class="tile" id="tile-${p.key}">
         <div class="t-name">${p.tr}</div>
@@ -166,13 +157,13 @@
       </div>
     `).join('');
     el('dateLine').textContent = state.data.today.MiladiTarihUzun || "";
-    el('updatePill').textContent = "Veri: " + (state.data.generatedAt ? state.data.generatedAt.split('T')[1].substring(0,5) : "Tamam");
   }
 
-  function loop() {
+  function tick() {
     const now = new Date();
-    el('clock').textContent = pad(now.getHours()) + ":" + pad(now.getMinutes());
-    
+    const clockStr = pad(now.getHours()) + ":" + pad(now.getMinutes());
+    el('clock').textContent = clockStr;
+
     const times = state.data.today;
     let next = null;
     const order = ["Imsak", "Ogle", "Ikindi", "Aksam", "Yatsi"];
@@ -189,31 +180,40 @@
       next = { k: "Imsak", t: new Date(tomorrow.setHours(h, m, 0, 0)) };
     }
 
+    // Geri sayım
     const diff = next.t - now;
     const h = Math.floor(diff / 3600000);
     const m = Math.floor((diff % 3600000) / 60000);
     const s = Math.floor((diff % 60000) / 1000);
     el('countdown').textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
-    el('nextName').textContent = PRAYERS.find(p => p.key === next.k).tr;
+    el('nextName').textContent = PRAYERS.find(p => p.key === next.k).tr + " • " + times[next.k];
 
+    // Aktif durum
     PRAYERS.forEach(p => el(`tile-${p.key}`).classList.remove('active'));
     el(`tile-${next.k}`).classList.add('active');
 
-    if (now.getMinutes() !== state.lastMinute) {
-      checkKerahat(now, times);
-      state.lastMinute = now.getMinutes();
-    }
-  }
+    // Dakika başı tetiklemeler
+    if (now.getMinutes() !== state.lastMin) {
+      state.lastMin = now.getMinutes();
+      
+      // Kerahat Kontrol
+      const [gh, gm] = times.Gunes.split(':').map(Number);
+      const [ah, am] = times.Aksam.split(':').map(Number);
+      const gunesTime = new Date(now).setHours(gh, gm, 0, 0);
+      const aksamTime = new Date(now).setHours(ah, am, 0, 0);
+      const isKerahat = (now > gunesTime && now < (gunesTime + 45*60000)) || 
+                        (now > (aksamTime - 45*60000) && now < aksamTime);
+      el('kerahatPill').style.display = isKerahat ? "block" : "none";
 
-  function checkKerahat(now, times) {
-    const [gh, gm] = times.Gunes.split(':').map(Number);
-    const [ah, am] = times.Aksam.split(':').map(Number);
-    const gunes = new Date(now).setHours(gh, gm, 0, 0);
-    const aksam = new Date(now).setHours(ah, am, 0, 0);
-    
-    const isKerahat = (now > gunes && now < (gunes + 45*60000)) || 
-                      (now > (aksam - 45*60000) && now < aksam);
-    el('kerahatPill').style.display = isKerahat ? "inline-block" : "none";
+      // Vakit Girdi Bildirimi
+      PRAYERS.forEach(p => {
+        if(times[p.key] === clockStr) {
+          el('ovName').textContent = p.tr;
+          el('overlay').classList.add('show');
+          setTimeout(() => el('overlay').classList.remove('show'), 60000);
+        }
+      });
+    }
   }
 
   loadData();
